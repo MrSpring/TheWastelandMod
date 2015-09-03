@@ -5,10 +5,9 @@
 
 package dk.mrspring.wasteland.city;
 
-import dk.mrspring.wasteland.Wasteland;
 import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.items.LootStack;
-import dk.mrspring.wasteland.utils.Message;
+import dk.mrspring.wasteland.ruin.RuinGenHelper;
 import dk.mrspring.wasteland.world.gen.WorldGenWastelandBigTree;
 import dk.mrspring.wasteland.world.gen.WorldGenWastelandClay;
 import dk.mrspring.wasteland.world.gen.WorldGenWastelandLake;
@@ -36,13 +35,13 @@ public class RuinedCity
 
         for (int i = 0; i < citySize; ++i)
         {
-            CityBlock generatingBlock = (CityBlock) this.layout.block.get(i);
+            CityBlock generatingBlock = this.layout.block.get(i);
             if (generatingBlock.doGenerate)
             {
                 generatingBlock.generate(world, random, buildingSchematics, loot, cityColour);
             } else
             {
-                boolean large = generatingBlock.area.length == 32 && (large = generatingBlock.area.width == 32);
+                boolean large = generatingBlock.area.length == 32 && generatingBlock.area.width == 32;
                 boolean genLake = large ? random.nextInt(4) > 0 : random.nextInt(4) == 0;
                 int trees = large ? random.nextInt(2) + 1 : 1;
                 byte w = 10;
@@ -81,12 +80,8 @@ public class RuinedCity
                 }
             }
 
-            if (i != citySize)
-            {
-                Wasteland.NETWORK.sendToAll(Message.createProgressMessage(i + 1, citySize + 1));
-            }
+//            Wasteland.NETWORK.sendToAll(Message.createProgressMessage(i + 1, citySize + 1));
         }
-
     }
 
     private void generateCityRoads(World world, Random r)
@@ -96,7 +91,7 @@ public class RuinedCity
 
         for (int b = 0; b < this.layout.block.size(); ++b)
         {
-            CityBlock block = (CityBlock) this.layout.block.get(b);
+            CityBlock block = this.layout.block.get(b);
             int w = block.area.width / 16;
             int l = block.area.length / 16;
             int x = block.area.position.X;
@@ -170,6 +165,7 @@ public class RuinedCity
         int surfaceBlockMeta = ModConfig.getSurfaceBlockMeta();
         int i;
         boolean f;
+        RuinGenHelper.setWorld(world);
         if (dir)
         {
             for (i = 0; i < length; ++i)
@@ -177,12 +173,12 @@ public class RuinedCity
                 f = r.nextInt(odds) == 0;
                 if (i < length / 2)
                 {
-                    world.setBlock(x + i, y1, z, f ? surfaceBlock : roadBlock, f ? surfaceBlockMeta : 15, 2);
+                    RuinGenHelper.setBlock(x + i, y1, z, f ? surfaceBlock : roadBlock, f ? surfaceBlockMeta : 15);
                     clearAbove(x + i, y1 + 1, z, 5, world);
                     fillBelow(x + i, y1 - 1, z, 3, world);
                 } else
                 {
-                    world.setBlock(x + i, y2, z, f ? surfaceBlock : roadBlock, f ? surfaceBlockMeta : 15, 2);
+                    RuinGenHelper.setBlock(x + i, y2, z, f ? surfaceBlock : roadBlock, f ? surfaceBlockMeta : 15);
                     clearAbove(x + i, y2 + 1, z, 5, world);
                     fillBelow(x + i, y2 - 1, z, 3, world);
                 }
@@ -194,12 +190,12 @@ public class RuinedCity
                 f = r.nextInt(odds) == 0;
                 if (i < length / 2)
                 {
-                    world.setBlock(x, y1, z + i, f ? surfaceBlock : roadBlock, f ? surfaceBlockMeta : 15, 2);
+                    RuinGenHelper.setBlock(x, y1, z + i, f ? surfaceBlock : roadBlock, f ? surfaceBlockMeta : 15);
                     clearAbove(x, y1 + 1, z + i, 5, world);
                     fillBelow(x, y1 - 1, z + i, 3, world);
                 } else
                 {
-                    world.setBlock(x, y2, z + i, f ? surfaceBlock : roadBlock, f ? surfaceBlockMeta : 15, 2);
+                    RuinGenHelper.setBlock(x, y2, z + i, f ? surfaceBlock : roadBlock, f ? surfaceBlockMeta : 15);
                     clearAbove(x, y2 + 1, z + i, 5, world);
                     fillBelow(x, y2 - 1, z + i, 3, world);
                 }
@@ -210,11 +206,12 @@ public class RuinedCity
 
     public static void clearAbove(int x, int y, int z, int d, World world)
     {
+        RuinGenHelper.setWorld(world);
         for (int i = 0; i < d; ++i)
         {
-            if (!world.getBlock(x, y + i, z).equals(Blocks.air))
+            if (!RuinGenHelper.getBlock(x, y + i, z).equals(Blocks.air))
             {
-                world.setBlock(x, y + i, z, Blocks.air, 0, 2);
+                RuinGenHelper.setBlock(x, y + i, z, Blocks.air, 0);
             }
         }
 
@@ -222,12 +219,13 @@ public class RuinedCity
 
     public static void fillBelow(int x, int y, int z, int d, World world)
     {
+        RuinGenHelper.setWorld(world);
         for (int i = 0; i < d; ++i)
         {
-            Block b = world.getBlock(x, y - i, z);
+            Block b = RuinGenHelper.getBlock(x, y - i, z);
             if (b.equals(Blocks.air) || b.equals(Blocks.deadbush))
             {
-                world.setBlock(x, y - i, z, Blocks.stone, 0, 2);
+                RuinGenHelper.setBlock(x, y - i, z, Blocks.stone, 0);
             }
         }
 

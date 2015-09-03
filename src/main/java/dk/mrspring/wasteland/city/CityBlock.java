@@ -20,12 +20,10 @@ import java.util.Random;
 public class CityBlock
 {
     Rectangle area;
-    int connections;
     boolean[] connectedFaces;
     boolean doGenerate;
     public String buildingName;
     public int[] cornerHeight;
-    public int buildingHeight;
     CityBlock[] connectedBlocks;
     private RuinGenHelper genHelper = new RuinGenHelper();
 
@@ -47,18 +45,8 @@ public class CityBlock
 
     public void setConnectedCityBlock(CityBlock block, int index)
     {
-        if (index < this.connectedBlocks.length)
-        {
-            this.connectedBlocks[index] = block;
-        } else
-        {
-            System.out.println("City block does not have side: " + String.valueOf(index));
-        }
-
-    }
-
-    public void setCorners(MultiVector position)
-    {
+        if (index < this.connectedBlocks.length) this.connectedBlocks[index] = block;
+        else System.out.println("City block does not have side: " + index);
     }
 
     public int[] heightVariation()
@@ -235,15 +223,16 @@ public class CityBlock
         {
             int x = random.nextInt(this.area.width - 2 * roadWidth) + roadWidth;
             int z = random.nextInt(this.area.length - 2 * roadWidth) + roadWidth;
+            RuinGenHelper.setWorld(world);
             if (random.nextInt(10) > 0)
             {
                 int type = random.nextInt(10);
                 Block b = type == 0 ? Blocks.cobblestone : (type == 1 ? Blocks.stonebrick : (type == 2 ? Blocks.mossy_cobblestone : (type == 3 ? Blocks.glass : (type == 4 ? Blocks.gravel : surfaceBlock))));
                 int m = type == 1 ? random.nextInt(3) : (type > 4 ? surfaceBlockMeta : 0);
-                world.setBlock(this.area.position.X + x, this.area.position.Y + 1, this.area.position.Z + z, b, m, 2);
+                RuinGenHelper.setBlock(this.area.position.X + x, this.area.position.Y + 1, this.area.position.Z + z, b, m);
             } else
             {
-                world.setBlock(this.area.position.X + x, this.area.position.Y, this.area.position.Z + z, Blocks.air, 0, 2);
+                RuinGenHelper.setBlock(this.area.position.X + x, this.area.position.Y, this.area.position.Z + z, Blocks.air, 0);
             }
         }
 
