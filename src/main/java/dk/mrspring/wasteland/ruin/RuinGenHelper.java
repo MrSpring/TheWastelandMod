@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
@@ -95,5 +96,20 @@ public class RuinGenHelper
     public static Chunk getChunkFromBlockCoords(int x, int z)
     {
         return worldObj.getChunkFromBlockCoords(asPos(x, 0, z));
+    }
+
+    public static boolean isAirBlock(int x, int y, int z)
+    {
+        return worldObj.isAirBlock(asPos(x, y, z));
+    }
+
+    public static int getSavedLightValue(EnumSkyBlock block, int x, int y, int z)
+    {
+        return worldObj.getLightFor(block, asPos(x, y, z));
+    }
+
+    public static boolean isBlockFreezable(int x, int y, int z)
+    {
+        return worldObj.canBlockFreeze(asPos(x, y, z), false);
     }
 }

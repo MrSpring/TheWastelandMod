@@ -7,8 +7,10 @@ package dk.mrspring.wasteland.world.gen;
 
 import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.items.BlockRadFluid;
+import dk.mrspring.wasteland.ruin.RuinGenHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
@@ -25,16 +27,18 @@ public class WorldGenWastelandClay extends WorldGenerator
         this.numberOfBlocks = p_i2011_1_;
     }
 
-    public boolean generate(World p_76484_1_, Random p_76484_2_, int p_76484_3_, int p_76484_4_, int p_76484_5_)
+    public boolean generate(World world, Random rand, BlockPos pos)
     {
         boolean generateClay = false;
+        int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+        RuinGenHelper.setWorld(world);
 
-        for (int field_150546_a = 0; field_150546_a < 10; ++field_150546_a)
+        for (int i = 0; i < 10; ++i)
         {
-            if (p_76484_1_.getBlock(p_76484_3_, p_76484_4_ - field_150546_a, p_76484_5_) instanceof BlockRadFluid && !(p_76484_1_.getBlock(p_76484_3_, p_76484_4_ - field_150546_a - 1, p_76484_5_) instanceof BlockRadFluid))
+            if (RuinGenHelper.getBlock(x, y - i, z) instanceof BlockRadFluid && !(RuinGenHelper.getBlock(x, y - i - 1, z) instanceof BlockRadFluid))
             {
                 generateClay = true;
-                p_76484_4_ -= field_150546_a;
+                y -= i;
             }
         }
 
@@ -43,25 +47,25 @@ public class WorldGenWastelandClay extends WorldGenerator
             return false;
         } else
         {
-            Object var17 = p_76484_2_.nextInt(ModConfig.clayRarity) == 0 ? Blocks.clay : Blocks.sand;
-            int l = p_76484_2_.nextInt(this.numberOfBlocks - 2) + 2;
+            Block placing = rand.nextInt(ModConfig.clayRarity) == 0 ? Blocks.clay : Blocks.sand;
+            int l = rand.nextInt(this.numberOfBlocks - 2) + 2;
             byte b0 = 1;
 
-            for (int i1 = p_76484_3_ - l; i1 <= p_76484_3_ + l; ++i1)
+            for (int i1 = x - l; i1 <= x + l; ++i1)
             {
-                for (int j1 = p_76484_5_ - l; j1 <= p_76484_5_ + l; ++j1)
+                for (int j1 = z - l; j1 <= z + l; ++j1)
                 {
-                    int k1 = i1 - p_76484_3_;
-                    int l1 = j1 - p_76484_5_;
+                    int k1 = i1 - x;
+                    int l1 = j1 - z;
                     if (k1 * k1 + l1 * l1 <= l * l)
                     {
-                        for (int i2 = p_76484_4_ - b0; i2 <= p_76484_4_ + b0; ++i2)
+                        for (int i2 = y - b0; i2 <= y + b0; ++i2)
                         {
-                            Block block = p_76484_1_.getBlock(i1, i2, j1);
-                            Block topBlock = p_76484_1_.getBlock(i1, i2 + 1, j1);
+                            Block block = RuinGenHelper.getBlock(i1, i2, j1);
+                            Block topBlock = RuinGenHelper.getBlock(i1, i2 + 1, j1);
                             if (block != Blocks.air && !(block instanceof BlockRadFluid) && topBlock != Blocks.air)
                             {
-                                p_76484_1_.setBlock(i1, i2, j1, (Block) var17, 0, 2);
+                                RuinGenHelper.setBlock(i1, i2, j1, placing, 0);
                             }
                         }
                     }

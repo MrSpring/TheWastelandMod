@@ -81,9 +81,9 @@ public class WastelandGenLayerBiome extends GenLayer
             b0 = 6;
         }
 
-        byte var23 = getModdedBiomeSize(p_75901_2_, b0);
+        int var23 = getModdedBiomeSize(p_75901_2_, b0);
         GenLayer genlayer = GenLayerZoom.magnify(1000L, genlayer2, 0);
-        GenLayer object = p_75901_2_.getBiomeLayer(p_75901_0_, genlayer2);
+        GenLayer object = p_75901_2_.getBiomeLayer(p_75901_0_, genlayer2, "");
         GenLayer genlayer1 = GenLayerZoom.magnify(1000L, genlayer, 2);
         GenLayerHills genlayerhills = new GenLayerHills(1000L, (GenLayer) object, genlayer1);
         genlayer = GenLayerZoom.magnify(1000L, genlayer, 2);
@@ -127,7 +127,7 @@ public class WastelandGenLayerBiome extends GenLayer
                 int k1 = aint[j1 + i1 * p_75904_3_];
                 int l1 = (k1 & 3840) >> 8;
                 k1 &= -3841;
-                aint1[j1 + i1 * p_75904_3_] = ((BiomeEntry) WeightedRandom.getItem(this.biomes, (int) (this.nextLong((long) (WeightedRandom.getTotalWeight(this.biomes) / 10)) * 10L))).biome.biomeID;
+                aint1[j1 + i1 * p_75904_3_] = ((BiomeEntry) WeightedRandom.getRandomItem(this.biomes, (int) (this.nextLong((long) (WeightedRandom.getTotalWeight(this.biomes) / 10)) * 10L))).biome.biomeID;
             }
         }
 

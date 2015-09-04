@@ -1,12 +1,5 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package dk.mrspring.wasteland.world;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import dk.mrspring.wasteland.world.gen.WastelandGeneratorInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiCreateWorld;
@@ -17,6 +10,8 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerBiomeEdge;
 import net.minecraft.world.gen.layer.GenLayerZoom;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldTypeWasteland extends WorldType
 {
@@ -34,20 +29,10 @@ public class WorldTypeWasteland extends WorldType
 
     public IChunkProvider getChunkGenerator(World world, String generatorOptions)
     {
-        return new ChunkProviderWasteland(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled());
+        return new ChunkProviderWasteland(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), "");
     }
 
-    public boolean isCustomizable()
-    {
-        return true;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void onCustomizeButton(Minecraft instance, GuiCreateWorld guiCreateWorld)
-    {
-    }
-
-    public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer)
+    public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer, String options)
     {
         WastelandGenLayerBiome ret = new WastelandGenLayerBiome(200L, parentLayer, this);
         GenLayer ret1 = GenLayerZoom.magnify(1000L, ret, 2);
