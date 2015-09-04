@@ -1,18 +1,14 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package dk.mrspring.wasteland.gui;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.IOException;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -52,18 +48,14 @@ public class BiomesGui extends GuiScreen
     private void drawBiomeNames(List<BiomeGenBase> biomes, int pixelWidth)
     {
         int shiftX = (int) ((double) this.shiftLeftPercent / 100.0D * (double) super.width);
-        FontRenderer font = FMLClientHandler.instance().getClient().fontRenderer;
-        if ((pixelWidth & 1) != 0)
-        {
-            int var10000 = (int) ((double) pixelWidth / 2.0D);
-        }
+        FontRenderer font = FMLClientHandler.instance().getClient().fontRendererObj;
 
         int x = (int) (0.77D * (double) super.width);
         int y = (int) (0.1D * (double) super.height);
 
         for (int i = 0; i < biomes.size(); ++i)
         {
-            this.drawString(font, ((BiomeGenBase) biomes.get(i)).biomeName, x - shiftX, y + i * (font.FONT_HEIGHT + 2), (((BiomeGenBase) biomes.get(i)).color & 16777215) + -16777216);
+            this.drawString(font, biomes.get(i).biomeName, x - shiftX, y + i * (font.FONT_HEIGHT + 2), (biomes.get(i).color & 16777215) + -16777216);
         }
 
     }
@@ -96,30 +88,5 @@ public class BiomesGui extends GuiScreen
     public boolean doesGuiPauseGame()
     {
         return false;
-    }
-
-    public void keyTyped(char c, int i)
-    {
-        super.keyTyped(c, i);
-    }
-
-    public void mouseClicked(int i, int j, int k)
-    {
-        super.mouseClicked(i, j, k);
-    }
-
-    public void updateScreen()
-    {
-        super.updateScreen();
-    }
-
-    public void onGuiClosed()
-    {
-        super.onGuiClosed();
-    }
-
-    public void actionPerformed(GuiButton b)
-    {
-        super.actionPerformed(b);
     }
 }

@@ -5,7 +5,6 @@
 
 package dk.mrspring.wasteland.ruin;
 
-import cpw.mods.fml.common.IWorldGenerator;
 import dk.mrspring.wasteland.items.LootStack;
 import dk.mrspring.wasteland.utils.CustomItemStack;
 import net.minecraft.block.material.Material;
@@ -14,6 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.IWorldGenerator;
 
 import java.util.Random;
 
@@ -29,9 +29,9 @@ public class RuinBarnHouse extends Ruin implements IWorldGenerator
     public boolean generate(World world, Random random, int x, int y, int z)
     {
         RuinGenHelper.setWorld(world);
-        Material material1 = world.getBlock(x, y, z).getMaterial();
+        Material material1 = RuinGenHelper.getBlock(x, y, z).getMaterial();
         int[] var14 = new int[]{x, y, z};
-        if (material1.isSolid() && world.getHeightValue(x + 1, z + 1) == y && world.getHeightValue(x, z + 1) == y && world.getHeightValue(x - 1, z + 1) == y && world.getHeightValue(x - 1, z) == y && world.getHeightValue(x - 1, z - 1) == y && world.getHeightValue(x, z - 1) == y && world.getHeightValue(x + 1, z - 1) == y)
+        if (material1.isSolid() && RuinGenHelper.getHeightValue(x + 1, z + 1) == y && RuinGenHelper.getHeightValue(x, z + 1) == y && RuinGenHelper.getHeightValue(x - 1, z + 1) == y && RuinGenHelper.getHeightValue(x - 1, z) == y && RuinGenHelper.getHeightValue(x - 1, z - 1) == y && RuinGenHelper.getHeightValue(x, z - 1) == y && RuinGenHelper.getHeightValue(x + 1, z - 1) == y)
         {
             RuinGenHelper.setWorld(world);
             int xCoord = x - 6;
@@ -42,7 +42,7 @@ public class RuinBarnHouse extends Ruin implements IWorldGenerator
             int chest;
             for (chest = 0; chest < 9; ++chest)
             {
-                world.setBlock(xCoord, yCoord, zCoord + chest, Blocks.cobblestone);
+                RuinGenHelper.setBlock(xCoord, yCoord, zCoord + chest, Blocks.cobblestone);
             }
 
             RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord + 0, Blocks.cobblestone);
@@ -160,7 +160,7 @@ public class RuinBarnHouse extends Ruin implements IWorldGenerator
             RuinGenHelper.setBlock(xCoord + 0, yCoord, zCoord + 6, Blocks.cobblestone);
             RuinGenHelper.setBlock(xCoord + 0, yCoord, zCoord + 7, Blocks.cobblestone);
             RuinGenHelper.setBlock(xCoord + 0, yCoord, zCoord + 8, Blocks.log);
-            RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord + 0, Blocks.fence);
+            RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord + 0, Blocks.oak_fence);
             RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord + 1, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord + 2, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord + 3, Blocks.air);
@@ -186,15 +186,15 @@ public class RuinBarnHouse extends Ruin implements IWorldGenerator
             RuinGenHelper.setBlock(xCoord + 3, yCoord, zCoord + 7, Blocks.cobblestone);
             RuinGenHelper.setBlock(xCoord + 3, yCoord, zCoord + 8, Blocks.cobblestone);
             RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 0, Blocks.log);
-            RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 1, Blocks.fence);
-            RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 2, Blocks.fence);
+            RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 1, Blocks.oak_fence);
+            RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 2, Blocks.oak_fence);
             RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 3, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 4, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 5, Blocks.air);
-            RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 6, Blocks.fence);
+            RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 6, Blocks.oak_fence);
             RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 7, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 4, yCoord, zCoord + 8, Blocks.air);
-            RuinGenHelper.setBlock(xCoord + 5, yCoord, zCoord + 0, Blocks.fence);
+            RuinGenHelper.setBlock(xCoord + 5, yCoord, zCoord + 0, Blocks.oak_fence);
             RuinGenHelper.setBlock(xCoord + 5, yCoord, zCoord + 1, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 5, yCoord, zCoord + 2, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 5, yCoord, zCoord + 3, Blocks.air);
@@ -212,7 +212,7 @@ public class RuinBarnHouse extends Ruin implements IWorldGenerator
             RuinGenHelper.setBlock(xCoord + 6, yCoord, zCoord + 6, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 6, yCoord, zCoord + 7, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 6, yCoord, zCoord + 8, Blocks.cobblestone);
-            RuinGenHelper.setBlock(xCoord + 7, yCoord, zCoord + 0, Blocks.fence);
+            RuinGenHelper.setBlock(xCoord + 7, yCoord, zCoord + 0, Blocks.oak_fence);
             RuinGenHelper.setBlock(xCoord + 7, yCoord, zCoord + 1, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 7, yCoord, zCoord + 2, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 7, yCoord, zCoord + 3, Blocks.air);
@@ -224,10 +224,10 @@ public class RuinBarnHouse extends Ruin implements IWorldGenerator
             RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 0, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 1, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 2, Blocks.air);
-            RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 3, Blocks.fence);
+            RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 3, Blocks.oak_fence);
             RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 4, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 5, Blocks.cobblestone);
-            RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 6, Blocks.fence);
+            RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 6, Blocks.oak_fence);
             RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 7, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 8, yCoord, zCoord + 8, Blocks.log);
             RuinGenHelper.setBlock(xCoord + 9, yCoord, zCoord + 0, Blocks.air);
@@ -239,7 +239,7 @@ public class RuinBarnHouse extends Ruin implements IWorldGenerator
             RuinGenHelper.setBlock(xCoord + 9, yCoord, zCoord + 6, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 9, yCoord, zCoord + 7, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 9, yCoord, zCoord + 8, Blocks.cobblestone);
-            RuinGenHelper.setBlock(xCoord + 10, yCoord, zCoord + 0, Blocks.fence);
+            RuinGenHelper.setBlock(xCoord + 10, yCoord, zCoord + 0, Blocks.oak_fence);
             RuinGenHelper.setBlock(xCoord + 10, yCoord, zCoord + 1, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 10, yCoord, zCoord + 2, Blocks.air);
             RuinGenHelper.setBlock(xCoord + 10, yCoord, zCoord + 3, Blocks.air);
@@ -355,7 +355,7 @@ public class RuinBarnHouse extends Ruin implements IWorldGenerator
             RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord - 1, Blocks.cobblestone);
             RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord + 0, Blocks.log);
             RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord + 7, Blocks.chest);
-            TileEntityChest var13 = (TileEntityChest) world.getTileEntity(xCoord + 1, yCoord, zCoord + 7);
+            TileEntityChest var13 = (TileEntityChest) RuinGenHelper.getTileEntity(xCoord + 1, yCoord, zCoord + 7);
             LootStack loot = this.setItems(random);
             CustomItemStack.placeLoot(random, var13, CustomItemStack.getLootItems(random, loot.items, loot.minNum, loot.maxNum, loot.repeat));
             RuinGenHelper.setBlock(xCoord + 1, yCoord, zCoord + 8, Blocks.log);

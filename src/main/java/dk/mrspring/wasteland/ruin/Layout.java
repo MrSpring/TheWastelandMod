@@ -26,6 +26,7 @@ public class Layout
 
     public Layout(World world, Random rand, Building center, Building[] structures, int vPosX, int vPosZ, int dim, int size)
     {
+        RuinGenHelper.setWorld(world);
         this.centerX = vPosX;
         this.centerZ = vPosZ;
         this.villageDim = dim;
@@ -35,7 +36,7 @@ public class Layout
         {
             i = (int) ((float) center.width / 2.0F);
             int offsetZ = (int) ((float) center.length / 2.0F);
-            this.cPos = new Rectangle(new Vector(vPosX - i, world.getHeightValue(vPosX - i, vPosZ - offsetZ) - 1, vPosZ - offsetZ), center.width, center.length);
+            this.cPos = new Rectangle(new Vector(vPosX - i, RuinGenHelper.getHeightValue(vPosX - i, vPosZ - offsetZ) - 1, vPosZ - offsetZ), center.width, center.length);
         } else
         {
             this.cPos = null;
@@ -146,15 +147,16 @@ public class Layout
 
     public static int getWorldHeight(World world, int x, int z)
     {
-        int worldHeight = world.getHeightValue(x, z);
+        RuinGenHelper.setWorld(world);
+        int worldHeight = RuinGenHelper.getHeightValue(x, z);
         if (worldHeight == 0)
         {
-            Chunk block = world.getChunkFromBlockCoords(x, z);
-            world.getChunkProvider().loadChunk(block.xPosition, block.zPosition);
-            worldHeight = world.getHeightValue(x, z);
+            Chunk block = RuinGenHelper.getChunkFromBlockCoords(x, z);
+            world.getChunkProvider().provideChunk(block.xPosition, block.zPosition);
+            worldHeight = RuinGenHelper.getHeightValue(x, z);
         }
 
-        Block var5 = world.getBlock(x, worldHeight, z);
+        Block var5 = RuinGenHelper.getBlock(x, worldHeight, z);
         if (worldHeight == 0)
         {
             System.out.println("World height still 0");

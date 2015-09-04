@@ -202,7 +202,7 @@ public class RuinedVillage
             {
                 if (i == 0 || j == 0 || i == r.length - 1 || j == r.width - 1)
                 {
-                    world.setBlock(r.position.X + j, r.position.Y + h, r.position.Z + i, Blocks.sponge);
+                    RuinGenHelper.setBlock(r.position.X + j, r.position.Y + h, r.position.Z + i, Blocks.sponge);
                 }
             }
         }

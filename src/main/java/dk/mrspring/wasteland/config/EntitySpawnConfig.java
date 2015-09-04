@@ -158,9 +158,9 @@ public class EntitySpawnConfig
 
             for (int j = 0; j < biomes.length; ++j)
             {
-                List monsterCreatures = biomes[j].getSpawnableList(EnumCreatureType.monster);
-                List passiveCreatures = biomes[j].getSpawnableList(EnumCreatureType.creature);
-                List waterCreatures = biomes[j].getSpawnableList(EnumCreatureType.waterCreature);
+                List monsterCreatures = biomes[j].getSpawnableList(EnumCreatureType.MONSTER);
+                List passiveCreatures = biomes[j].getSpawnableList(EnumCreatureType.CREATURE);
+                List waterCreatures = biomes[j].getSpawnableList(EnumCreatureType.WATER_CREATURE);
 
                 int k;
                 for (k = 0; k < monsterCreatures.size(); ++k)

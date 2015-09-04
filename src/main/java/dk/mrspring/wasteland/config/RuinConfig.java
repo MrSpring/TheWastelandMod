@@ -5,10 +5,10 @@
 
 package dk.mrspring.wasteland.config;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import dk.mrspring.wasteland.utils.CustomItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class RuinConfig
 {
@@ -125,7 +125,7 @@ public class RuinConfig
                     damage = 0;
                 }
 
-                ItemStack itemStack = GameRegistry.findItemStack(mod, item, 1);
+                ItemStack itemStack = new ItemStack(GameRegistry.findItem(mod, item), 1);
                 itemStack.setItemDamage(damage);
                 items[i] = new CustomItemStack(itemStack, max, min);
             }

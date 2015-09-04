@@ -5,13 +5,12 @@
 
 package dk.mrspring.wasteland;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dk.mrspring.wasteland.city.CityGenerator;
 import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.gui.ProgressGui;
 import dk.mrspring.wasteland.items.BlockRadFluid;
 import dk.mrspring.wasteland.items.ItemRegistry;
+import dk.mrspring.wasteland.ruin.RuinGenHelper;
 import dk.mrspring.wasteland.ruin.RuinVillageGenerator;
 import dk.mrspring.wasteland.utils.Vector;
 import dk.mrspring.wasteland.world.WastelandWorldData;
@@ -25,8 +24,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -36,6 +35,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class WastelandEventHandler
     WastelandWorldData worldSaveData;
     boolean newSpawn;
     int spawnHeight;
-    Vector spawnLoc;
+    BlockPos spawnLoc;
 
     public WastelandEventHandler()
     {
@@ -60,18 +61,18 @@ public class WastelandEventHandler
             ServerCommandManager spawn = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
             GetBiomesCommand villageLocation = new GetBiomesCommand();
             GetNamesCommand cityLocation = new GetNamesCommand();
-            if (!spawn.getCommands().containsKey(villageLocation.getCommandName()))
+            if (!spawn.getCommands().containsKey(villageLocation.getName()))
             {
                 spawn.registerCommand(villageLocation);
             }
 
-            if (!spawn.getCommands().containsKey(cityLocation.getCommandName()))
+            if (!spawn.getCommands().containsKey(cityLocation.getName()))
             {
                 spawn.registerCommand(cityLocation);
             }
         }
 
-        if (!event.world.isRemote && event.world.getWorldChunkManager().getClass().getName() == WorldChunkManagerWasteland.class.getName())
+        if (!event.world.isRemote && event.world.getWorldChunkManager().getClass().getName().equals(WorldChunkManagerWasteland.class.getName()))
         {
             if (MinecraftServer.getServer().isSinglePlayer())
             {
@@ -102,7 +103,7 @@ public class WastelandEventHandler
                 this.spawnHeight = this.getMinWorldHeight(spawn1, 3, event.world) - 7;
                 spawn1.Y = this.spawnHeight;
                 RuinVillageGenerator.spawnBunker(spawn1, event.world);
-                this.spawnLoc = new Vector(spawn1.X, spawn1.Y + 1, spawn1.Z);
+                this.spawnLoc = new BlockPos(spawn1.X, spawn1.Y + 1, spawn1.Z);
                 this.worldSaveData.saveSpawnLoc(this.spawnLoc);
             }
         }
@@ -146,14 +147,15 @@ public class WastelandEventHandler
     {
         if (ModConfig.spawnBunker && event.world.getWorldChunkManager().getClass().getName() == WorldChunkManagerWasteland.class.getName() && event.entity instanceof EntityPlayer && !event.world.isRemote)
         {
-            Vector pos = new Vector((int) event.entity.posX, (int) event.entity.posY, (int) event.entity.posZ);
+//            Vector pos = new Vector((int) event.entity.posX, (int) event.entity.posY, (int) event.entity.posZ);
             EntityPlayer player = (EntityPlayer) event.entity;
-            if (this.isNewPlayer(player) && Vector.VtoVlengthXZ(pos, this.spawnLoc) < 16.0D)
+            BlockPos pos = new BlockPos(player.posX, player.posY, player.posZ);
+            if (this.isNewPlayer(player) && pos.distanceSq(this.spawnLoc)/*Vector.VtoVlengthXZ(pos, this.spawnLoc)*/ < 16.0D)
             {
-                player.setPosition((double) this.spawnLoc.X, (double) this.spawnLoc.Y, (double) this.spawnLoc.Z);
-                ChunkCoordinates spawnPos = new ChunkCoordinates(this.spawnLoc.X - 2, this.spawnLoc.Y, this.spawnLoc.Z + 1);
-                player.setSpawnChunk(spawnPos, false);
-                this.worldSaveData.savePlayerName(player.getDisplayName());
+                player.setPosition(this.spawnLoc.getX(), this.spawnLoc.getY(), this.spawnLoc.getZ());
+                BlockPos spawnPos = new BlockPos(this.spawnLoc.getX() - 2, this.spawnLoc.getY(), this.spawnLoc.getZ() + 1);
+                player.setSpawnChunk(spawnPos, false, event.world.provider.getDimensionId());
+                this.worldSaveData.savePlayerName(player.getDisplayNameString());
             }
         }
 
@@ -167,14 +169,14 @@ public class WastelandEventHandler
     @SubscribeEvent
     public void disableSleep(PlayerInteractEvent event)
     {
-        Action var10001 = event.action;
         if (event.action == Action.RIGHT_CLICK_BLOCK && ModConfig.disableSleep)
         {
-            Block block = event.world.getBlock(event.x, event.y, event.z);
+            RuinGenHelper.setWorld(event.world);
+            Block block = RuinGenHelper.getBlock(event.pos.getX(), event.pos.getY(), event.pos.getZ());
             if (block instanceof BlockBed && !event.world.isRemote)
             {
-                ChunkCoordinates spawnPos = new ChunkCoordinates(event.x, event.y, event.z);
-                event.entityPlayer.setSpawnChunk(spawnPos, false);
+                BlockPos spawnPos = event.pos;
+                event.entityPlayer.setSpawnChunk(spawnPos, false, event.world.provider.getDimensionId());
                 event.entityPlayer.addChatMessage(new ChatComponentText("Spawn point set..."));
                 event.setCanceled(true);
             }
@@ -213,7 +215,8 @@ public class WastelandEventHandler
                     int bx = (int) (event.entityPlayer.posX + x1 * i - 1.0D);
                     int by = (int) (event.entityPlayer.posY + (double) event.entityPlayer.eyeHeight + y1 * i);
                     int bz = (int) (event.entityPlayer.posZ + z1 * i);
-                    Block block = event.world.getBlock(bx, by, bz);
+                    RuinGenHelper.setWorld(event.world);
+                    Block block = RuinGenHelper.getBlock(bx, by, bz);
                     if (block != null && block.getMaterial() == Material.water)
                     {
                         if (!block.getUnlocalizedName().equals(Blocks.water.getUnlocalizedName()))
@@ -243,16 +246,17 @@ public class WastelandEventHandler
         if (result != null)
         {
             event.result = result;
-            event.setResult(Result.ALLOW);
+            event.setResult(Event.Result.ALLOW);
         }
     }
 
     private ItemStack fillCustomBucket(World world, MovingObjectPosition pos)
     {
-        Block block = world.getBlock(pos.blockX, pos.blockY, pos.blockZ);
+        RuinGenHelper.setWorld(world);
+        Block block = RuinGenHelper.getBlock(pos.getBlockPos().getX(), pos.getBlockPos().getY(), pos.getBlockPos().getZ());
         if (block instanceof BlockRadFluid)
         {
-            world.setBlockToAir(pos.blockX, pos.blockY, pos.blockZ);
+            world.setBlockToAir(pos.getBlockPos());
             return new ItemStack(ItemRegistry.radiationWasteBucket);
         } else
         {

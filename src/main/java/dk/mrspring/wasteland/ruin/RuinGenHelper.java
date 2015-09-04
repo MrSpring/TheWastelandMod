@@ -91,4 +91,9 @@ public class RuinGenHelper
     {
         return worldObj.getBlockState(asPos(x, y, z)).getBlock();
     }
+
+    public static Chunk getChunkFromBlockCoords(int x, int z)
+    {
+        return worldObj.getChunkFromBlockCoords(asPos(x, 0, z));
+    }
 }

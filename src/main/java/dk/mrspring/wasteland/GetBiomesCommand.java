@@ -5,6 +5,7 @@
 
 package dk.mrspring.wasteland;
 
+import dk.mrspring.wasteland.ruin.RuinGenHelper;
 import dk.mrspring.wasteland.utils.Message;
 import dk.mrspring.wasteland.utils.Vector;
 import net.minecraft.command.CommandBase;
@@ -26,17 +27,20 @@ public class GetBiomesCommand extends CommandBase
     {
     }
 
-    public String getCommandName()
+    @Override
+    public String getName()
     {
         return "biomes";
     }
 
+    @Override
     public String getCommandUsage(ICommandSender iCommandSender)
     {
-        return "/biomes <range> (min range is " + String.valueOf(200) + ")";
+        return "/biomes <range> (min range is " + 200 + ")";
     }
 
-    public void processCommand(ICommandSender iCommandSender, String[] var)
+    @Override
+    public void execute(ICommandSender iCommandSender, String[] var)
     {
         if (iCommandSender instanceof EntityPlayer)
         {
@@ -78,14 +82,15 @@ public class GetBiomesCommand extends CommandBase
         new Random();
         Wasteland.NETWORK.sendToAll(Message.createChatMessage("Creating biomes map (please wait)..."));
         Wasteland.NETWORK.sendToAll(Message.createProgressMessage(0, 0));
-        ArrayList biomes = new ArrayList();
+        ArrayList<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
         float count = 0.0F;
 
+        RuinGenHelper.setWorld(world);
         for (int j = 0; j < minSize; ++j)
         {
             for (int i = 0; i < minSize; ++i)
             {
-                BiomeGenBase currentBiome = world.getBiomeGenForCoords(position.X - minSize * interval / 2 + i * interval, position.Z - minSize * interval / 2 + j * interval);
+                BiomeGenBase currentBiome = RuinGenHelper.getBiomeGenForCoords(position.X - minSize * interval / 2 + i * interval, position.Z - minSize * interval / 2 + j * interval);
                 if (!biomes.contains(currentBiome))
                 {
                     biomes.add(currentBiome);

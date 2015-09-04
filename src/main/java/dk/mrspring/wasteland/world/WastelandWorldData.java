@@ -1,13 +1,9 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package dk.mrspring.wasteland.world;
 
 import dk.mrspring.wasteland.Wasteland;
 import dk.mrspring.wasteland.utils.Schematic;
 import dk.mrspring.wasteland.utils.Vector;
+import net.minecraft.util.BlockPos;
 import org.jnbt.*;
 
 import java.io.*;
@@ -115,9 +111,9 @@ public class WastelandWorldData
             for (int newGlobalTag = 0; newGlobalTag < villagePosition.size(); ++newGlobalTag)
             {
                 HashMap fos = new HashMap();
-                fos.put("X", new IntTag("X", ((Vector) villagePosition.get(newGlobalTag)).X));
-                fos.put("Y", new IntTag("Y", ((Vector) villagePosition.get(newGlobalTag)).Y));
-                fos.put("Z", new IntTag("Z", ((Vector) villagePosition.get(newGlobalTag)).Z));
+                fos.put("X", new IntTag("X", villagePosition.get(newGlobalTag).X));
+                fos.put("Y", new IntTag("Y", villagePosition.get(newGlobalTag).Y));
+                fos.put("Z", new IntTag("Z", villagePosition.get(newGlobalTag).Z));
                 CompoundTag nos = new CompoundTag(String.valueOf(newGlobalTag + 1), fos);
                 tagList.add(nos);
                 parentList.add("Villages");
@@ -352,7 +348,7 @@ public class WastelandWorldData
         return tag;
     }
 
-    public void saveSpawnLoc(Vector spawn)
+    public void saveSpawnLoc(BlockPos spawn)
     {
         ArrayList tagList = new ArrayList();
         ArrayList parentList = new ArrayList();
@@ -366,9 +362,9 @@ public class WastelandWorldData
             nbt.close();
             e.close();
             HashMap spawnTag = new HashMap();
-            spawnTag.put("spawnX", new IntTag("spawnX", spawn.X));
-            spawnTag.put("spawnY", new IntTag("spawnY", spawn.Y));
-            spawnTag.put("spawnZ", new IntTag("spawnZ", spawn.Z));
+            spawnTag.put("spawnX", new IntTag("spawnX", spawn.getX()));
+            spawnTag.put("spawnY", new IntTag("spawnY", spawn.getY()));
+            spawnTag.put("spawnZ", new IntTag("spawnZ", spawn.getZ()));
             CompoundTag tag = new CompoundTag("Spawn", spawnTag);
             tagList.add(tag);
             parentList.add("WastelandMod");
@@ -386,9 +382,9 @@ public class WastelandWorldData
 
     }
 
-    public Vector loadSpawnLoc()
+    public BlockPos loadSpawnLoc()
     {
-        Vector spawn = null;
+        BlockPos spawn = null;
 
         try
         {
@@ -397,7 +393,7 @@ public class WastelandWorldData
             Map spawnLoc = ((CompoundTag) getChildTag(((CompoundTag) nbt.readTag()).getValue(), "Spawn", CompoundTag.class)).getValue();
             nbt.close();
             e.close();
-            spawn = new Vector(((Integer) getChildTag(spawnLoc, "spawnX", IntTag.class).getValue()).intValue(), ((Integer) getChildTag(spawnLoc, "spawnY", IntTag.class).getValue()).intValue(), ((Integer) getChildTag(spawnLoc, "spawnZ", IntTag.class).getValue()).intValue());
+            spawn = new BlockPos(((Integer) getChildTag(spawnLoc, "spawnX", IntTag.class).getValue()).intValue(), ((Integer) getChildTag(spawnLoc, "spawnY", IntTag.class).getValue()).intValue(), ((Integer) getChildTag(spawnLoc, "spawnZ", IntTag.class).getValue()).intValue());
         } catch (Exception var5)
         {
             var5.printStackTrace();

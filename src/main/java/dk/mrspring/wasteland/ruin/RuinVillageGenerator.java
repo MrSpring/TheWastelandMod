@@ -5,8 +5,6 @@
 
 package dk.mrspring.wasteland.ruin;
 
-import cpw.mods.fml.common.IWorldGenerator;
-import cpw.mods.fml.common.registry.GameRegistry;
 import dk.mrspring.wasteland.WastelandBiomes;
 import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.config.RuinConfig;
@@ -20,6 +18,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.fml.common.IWorldGenerator;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,16 +48,17 @@ public class RuinVillageGenerator implements IWorldGenerator
 
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
     {
-        if (world.provider.dimensionId == 0 && world.getBiomeGenForCoords(chunkX * 16, chunkZ * 16) == WastelandBiomes.apocalypse && this.loadedWorld)
+        RuinGenHelper.setWorld(world);
+        if (world.provider.getDimensionId() == 0 && RuinGenHelper.getBiomeGenForCoords(chunkX * 16, chunkZ * 16) == WastelandBiomes.apocalypse && this.loadedWorld)
         {
             this.generateVillage(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
         }
-
     }
 
     public void generateVillage(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
     {
-        Vector currentLoc = new Vector(chunkX * 16, world.getHeightValue(chunkX * 16, chunkZ * 16), chunkZ * 16);
+        RuinGenHelper.setWorld(world);
+        Vector currentLoc = new Vector(chunkX * 16, RuinGenHelper.getHeightValue(chunkX * 16, chunkZ * 16), chunkZ * 16);
         if (this.checkDist(currentLoc, (double) (ModConfig.minVillageDistance * 16)) && !this.generating && !world.isRemote)
         {
             this.generating = true;
@@ -75,7 +76,6 @@ public class RuinVillageGenerator implements IWorldGenerator
 
             this.generating = false;
         }
-
     }
 
     public static void spawnBunker(Vector pos, World world)
@@ -88,7 +88,7 @@ public class RuinVillageGenerator implements IWorldGenerator
         byte cX = 3;
         byte cZ = 3;
         System.out.println(pos.toCustomString());
-
+        RuinGenHelper.setWorld(world);
         int i;
         for (i = 0; i < 5; ++i)
         {
@@ -98,8 +98,8 @@ public class RuinVillageGenerator implements IWorldGenerator
                 {
                     if (blocks[count] == 54)
                     {
-                        world.setBlock(pos.X - cX + i1, pos.Y + i, pos.Z - cZ + j, Block.getBlockById(blocks[count]), data[count], 0);
-                        TileEntityChest meta = (TileEntityChest) world.getTileEntity(pos.X - cX + i1, pos.Y + i, pos.Z - cZ + j);
+                        RuinGenHelper.setBlock(pos.X - cX + i1, pos.Y + i, pos.Z - cZ + j, Block.getBlockById(blocks[count]), data[count]);
+                        TileEntityChest meta = (TileEntityChest) RuinGenHelper.getTileEntity(pos.X - cX + i1, pos.Y + i, pos.Z - cZ + j);
                         LootStack loot = new LootStack(RuinConfig.getLoot(RuinConfig.startLoot), RuinConfig.startLootMax, RuinConfig.startLootMin, RuinConfig.startLootRepeat);
                         CustomItemStack.placeLoot(random, meta, CustomItemStack.getLootItems(random, loot.items, loot.minNum, loot.maxNum, loot.repeat));
                     } else if (blocks[count] == 98)
@@ -107,10 +107,10 @@ public class RuinVillageGenerator implements IWorldGenerator
                         int var14 = random.nextInt(10);
                         var14 = var14 > 6 ? random.nextInt(5) : 0;
                         var14 = var14 > 2 ? random.nextInt(2) + 1 : var14;
-                        world.setBlock(pos.X - cX + i1, pos.Y + i, pos.Z - cZ + j, Block.getBlockById(blocks[count]), var14, 0);
+                        RuinGenHelper.setBlock(pos.X - cX + i1, pos.Y + i, pos.Z - cZ + j, Block.getBlockById(blocks[count]), var14);
                     } else
                     {
-                        world.setBlock(pos.X - cX + i1, pos.Y + i, pos.Z - cZ + j, Block.getBlockById(blocks[count]), data[count], 0);
+                        RuinGenHelper.setBlock(pos.X - cX + i1, pos.Y + i, pos.Z - cZ + j, Block.getBlockById(blocks[count]), data[count]);
                     }
 
                     ++count;
@@ -118,17 +118,17 @@ public class RuinVillageGenerator implements IWorldGenerator
             }
         }
 
-        world.setBlock(pos.X - 1, pos.Y + 1, pos.Z - 4, Blocks.air, 0, 2);
-        world.setBlock(pos.X - 1, pos.Y + 2, pos.Z - 4, Blocks.air, 0, 2);
+        RuinGenHelper.setBlock(pos.X - 1, pos.Y + 1, pos.Z - 4, Blocks.air, 0);
+        RuinGenHelper.setBlock(pos.X - 1, pos.Y + 2, pos.Z - 4, Blocks.air, 0);
 
         for (i = pos.Y + 1; i < worldHeight; ++i)
         {
-            world.setBlock(pos.X - 1, i, pos.Z - 5, Blocks.ladder, 3, 2);
+            RuinGenHelper.setBlock(pos.X - 1, i, pos.Z - 5, Blocks.ladder, 3);
         }
 
-        world.setBlock(pos.X - 1, worldHeight, pos.Z - 5, Blocks.air, 3, 2);
-        world.setBlock(pos.X - 1, worldHeight + 1, pos.Z - 5, Blocks.air, 3, 2);
-        world.setBlock(pos.X - 1, worldHeight + 2, pos.Z - 5, Blocks.air, 3, 2);
+        RuinGenHelper.setBlock(pos.X - 1, worldHeight, pos.Z - 5, Blocks.air, 3);
+        RuinGenHelper.setBlock(pos.X - 1, worldHeight + 1, pos.Z - 5, Blocks.air, 3);
+        RuinGenHelper.setBlock(pos.X - 1, worldHeight + 2, pos.Z - 5, Blocks.air, 3);
     }
 
     private boolean checkCenter(Vector currentLoc, int rad, int maxVar, World world)
@@ -195,7 +195,7 @@ public class RuinVillageGenerator implements IWorldGenerator
     {
         int villageDim = dim / 2;
         int[][] heightMap = new int[2][villageDim * villageDim];
-
+        RuinGenHelper.setWorld(world);
         for (int i = 0; i < villageDim; ++i)
         {
             for (int j = 0; j < villageDim; ++j)
@@ -208,7 +208,7 @@ public class RuinVillageGenerator implements IWorldGenerator
                     if (height != 0)
                     {
                         heightMap[0][i * villageDim + j] = height;
-                        heightMap[1][i * villageDim + j] = Block.getIdFromBlock(world.getBlock(position.X + j * 2 - villageDim, height, position.Z + i * 2 - villageDim));
+                        heightMap[1][i * villageDim + j] = Block.getIdFromBlock(RuinGenHelper.getBlock(position.X + j * 2 - villageDim, height, position.Z + i * 2 - villageDim));
                         flag = false;
                     }
                 }
@@ -220,11 +220,12 @@ public class RuinVillageGenerator implements IWorldGenerator
 
     public static int getWorldHeight(World world, int x, int z)
     {
-        int worldHeight = world.getHeightValue(x, z);
+        RuinGenHelper.setWorld(world);
+        int worldHeight = RuinGenHelper.getHeightValue(x, z);
         if (worldHeight == 0)
         {
-            world.getChunkProvider().loadChunk(x >> 4, z >> 4);
-            worldHeight = world.getHeightValue(x, z);
+            world.getChunkProvider().provideChunk(x >> 4, z >> 4);
+            worldHeight = RuinGenHelper.getHeightValue(x, z);
         }
 
         if (worldHeight == 0)

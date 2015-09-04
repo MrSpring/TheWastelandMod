@@ -5,18 +5,15 @@
 
 package dk.mrspring.wasteland.client;
 
-import cpw.mods.fml.client.FMLClientHandler;
+import dk.mrspring.wasteland.CommonProxy;
 import dk.mrspring.wasteland.gui.BiomesGui;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.fml.client.FMLClientHandler;
 
 import java.util.List;
 
-public class ClientProxy
+public class ClientProxy extends CommonProxy
 {
-    public ClientProxy()
-    {
-    }
-
     public static void displayBiomeMap(int[][] biomeMap, int i, List<BiomeGenBase> biomes)
     {
         FMLClientHandler.instance().getClient().displayGuiScreen(new BiomesGui(biomeMap, 200, biomes));

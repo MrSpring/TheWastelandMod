@@ -1,13 +1,5 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package dk.mrspring.wasteland.utils;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import dk.mrspring.wasteland.GetBiomesCommand;
 import dk.mrspring.wasteland.client.ClientProxy;
 import dk.mrspring.wasteland.gui.ProgressGui;
@@ -16,6 +8,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +67,7 @@ public class Message implements IMessage
         return new Message(dataOut);
     }
 
-    public static Message createChatMessage(String string)
+    public static IMessage createChatMessage(String string)
     {
         byte[] dataOut = new byte[string.length() + 1];
         dataOut[0] = 2;
@@ -85,9 +80,9 @@ public class Message implements IMessage
         return new Message(dataOut);
     }
 
-    public static Message createPlayerInfoMessage(EntityPlayer player)
+    public static IMessage createPlayerInfoMessage(EntityPlayer player)
     {
-        String playerName = player.getDisplayName();
+        String playerName = player.getDisplayNameString();
         Vector pos = new Vector((int) player.posX, (int) player.posY, (int) player.posZ);
         byte[] dataOut = new byte[12 + playerName.length() + 1];
         dataOut[0] = 3;

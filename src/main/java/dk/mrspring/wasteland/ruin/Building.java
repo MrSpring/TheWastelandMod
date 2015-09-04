@@ -111,7 +111,6 @@ public class Building
     {
         Block surfaceBlock = ModConfig.getSurfaceBlock();
         int surfaceBlockMeta = ModConfig.getSurfaceBlockMeta();
-        RuinGenHelper var10000 = this.genHelper;
         RuinGenHelper.setWorld(world);
         byte maxSize;
         byte minSize;
@@ -146,10 +145,10 @@ public class Building
 
             for (z = 0; z < x; ++z)
             {
-                world.setBlock(pos.X + 1, pos.Y - 1 - z, pos.Z + 1, Blocks.water);
-                world.setBlock(pos.X + 2, pos.Y - 1 - z, pos.Z + 1, Blocks.water);
-                world.setBlock(pos.X + 2, pos.Y - 1 - z, pos.Z + 2, Blocks.water);
-                world.setBlock(pos.X + 1, pos.Y - 1 - z, pos.Z + 2, Blocks.water);
+                RuinGenHelper.setBlock(pos.X + 1, pos.Y - 1 - z, pos.Z + 1, Blocks.water);
+                RuinGenHelper.setBlock(pos.X + 2, pos.Y - 1 - z, pos.Z + 1, Blocks.water);
+                RuinGenHelper.setBlock(pos.X + 2, pos.Y - 1 - z, pos.Z + 2, Blocks.water);
+                RuinGenHelper.setBlock(pos.X + 1, pos.Y - 1 - z, pos.Z + 2, Blocks.water);
             }
         } else
         {
@@ -184,20 +183,17 @@ public class Building
 
                     if (this.blocks[count] == 7)
                     {
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(pos.X + x, pos.Y + j, pos.Z + z, ModConfig.getSurfaceBlock(), surfaceBlockMeta);
                     } else if (this.blocks[count] != 2)
                     {
                         if (this.blocks[count] == 54)
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(pos.X + x, pos.Y + j, pos.Z + z, Blocks.chest);
-                            TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos.X + x, pos.Y + j, pos.Z + z);
+                            TileEntityChest chest = (TileEntityChest) RuinGenHelper.getTileEntity(pos.X + x, pos.Y + j, pos.Z + z);
                             LootStack loot = this.setItems(random);
                             CustomItemStack.placeLoot(random, chest, CustomItemStack.getLootItems(random, loot.items, loot.minNum, loot.maxNum, loot.repeat));
                         } else
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(pos.X + x, pos.Y + j, pos.Z + z, Block.getBlockById(this.blocks[count]), this.data[count]);
                         }
                     }

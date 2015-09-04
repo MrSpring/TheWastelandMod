@@ -5,7 +5,6 @@
 
 package dk.mrspring.wasteland;
 
-import cpw.mods.fml.common.IWorldGenerator;
 import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.world.WorldChunkManagerWasteland;
 import net.minecraft.block.Block;
@@ -14,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.fml.common.IWorldGenerator;
 
 import java.util.Random;
 
@@ -29,18 +29,11 @@ public class PostModWorldGenerator implements IWorldGenerator
     private static int checkingChunkX;
     private static int checkingChunkZ;
 
-    public PostModWorldGenerator()
-    {
-    }
-
-    public IWorldGenerator toIWorldGenerator()
-    {
-        return this;
-    }
-
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
     {
-        if (world.provider.dimensionId == 0 && world.getWorldChunkManager() instanceof WorldChunkManagerWasteland && ModConfig.forceDisableGrass)
+        // Removed for now. TODO: Re-implement
+        /*if (world.provider.getDimensionId() == 0 &&
+                world.getWorldChunkManager() instanceof WorldChunkManagerWasteland && ModConfig.forceDisableGrass)
         {
             if (!checkingNearChunks)
             {
@@ -66,21 +59,21 @@ public class PostModWorldGenerator implements IWorldGenerator
             {
                 checkReplaceBlocks(world.getChunkFromChunkCoords(chunkX, chunkZ), world, chunkX, chunkZ);
             }
-        }
+        }*/
 
     }
 
     private static boolean checkReplaceBlocks(Chunk chunk, World world, int chunkX, int chunkZ)
     {
         boolean blocksExist = false;
-        ExtendedBlockStorage[] extStore = chunk.getBlockStorageArray();
+        /*ExtendedBlockStorage[] extStore = chunk.getBlockStorageArray();
 
         for (int i = 3; extStore != null && i < extStore.length; ++i)
         {
             ExtendedBlockStorage extB = extStore[i];
             if (extB != null)
             {
-                byte[] blocks = extB.getBlockLSBArray();
+                byte[] blocks = extB.get//getBlockLSBArray();
 
                 for (int j = 0; j < blocks.length; ++j)
                 {
@@ -96,7 +89,7 @@ public class PostModWorldGenerator implements IWorldGenerator
                 }
             }
         }
-
+*/
         return blocksExist;
     }
 

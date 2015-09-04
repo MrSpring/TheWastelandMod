@@ -5,18 +5,16 @@
 
 package dk.mrspring.wasteland.ruin;
 
-import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.IWorldGenerator;
 
 import java.util.Random;
 
 public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
 {
-    private RuinGenHelper genHelper = new RuinGenHelper();
-
     public RuinRuinedCiv2(String par1Name)
     {
         super(par1Name);
@@ -24,23 +22,18 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
 
     public boolean generate(World world, Random random, int i, int j, int k)
     {
-        RuinGenHelper var10000 = this.genHelper;
         RuinGenHelper.setWorld(world);
-        boolean byte0 = true;
-        int l = random.nextInt(2) + 2;
-        int i1 = random.nextInt(2) + 2;
-        boolean flag = false;
         int j1 = 0;
         int k1 = 0;
-        Material material = world.getBlock(i, j, k).getMaterial();
-        Material material1 = world.getBlock(i, j - 1, k).getMaterial();
-        Material material2 = world.getBlock(i + 6, j, k).getMaterial();
-        Material material3 = world.getBlock(i, j, k + 6).getMaterial();
-        Material material4 = world.getBlock(i + 6, j, k + 6).getMaterial();
-        Material material5 = world.getBlock(i, j + 1, k).getMaterial();
-        Material material6 = world.getBlock(i + 6, j + 1, k).getMaterial();
-        Material material7 = world.getBlock(i, j + 1, k + 6).getMaterial();
-        Material material8 = world.getBlock(i + 6, j + 1, k + 6).getMaterial();
+        Material material = RuinGenHelper.getBlock(i, j, k).getMaterial();
+        Material material1 = RuinGenHelper.getBlock(i, j - 1, k).getMaterial();
+        Material material2 = RuinGenHelper.getBlock(i + 6, j, k).getMaterial();
+        Material material3 = RuinGenHelper.getBlock(i, j, k + 6).getMaterial();
+        Material material4 = RuinGenHelper.getBlock(i + 6, j, k + 6).getMaterial();
+        Material material5 = RuinGenHelper.getBlock(i, j + 1, k).getMaterial();
+        Material material6 = RuinGenHelper.getBlock(i + 6, j + 1, k).getMaterial();
+        Material material7 = RuinGenHelper.getBlock(i, j + 1, k + 6).getMaterial();
+        Material material8 = RuinGenHelper.getBlock(i + 6, j + 1, k + 6).getMaterial();
         if ((material.isSolid() || material1.isSolid()) && material2.isSolid() && material3.isSolid() && material4.isSolid() && !material5.isSolid() && !material6.isSolid() && !material7.isSolid() && !material8.isSolid())
         {
             boolean flag1 = true;
@@ -93,7 +86,6 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                     {
                         for (k3 = 0; k3 < 80; ++k3)
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + k1, j + i3, k + j1, Blocks.air);
                             ++k1;
                             if (k1 == 8)
@@ -110,7 +102,6 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                     int i4;
                     for (i4 = 0; i4 < 80; ++i4)
                     {
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + k3, j, k + i3, k2);
                         ++k3;
                         if (k3 == 8)
@@ -129,7 +120,6 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                     {
                         for (k6 = 0; k6 < 99; ++k6)
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + j4, j + 4, k + k4, l1);
                             ++j4;
                             if (j4 == 9)
@@ -145,25 +135,21 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                     {
                         for (l10 = 0; l10 < 8; ++l10)
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l10, j + k6, k, l1);
                         }
 
                         for (l10 = 0; l10 < 9; ++l10)
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l10, j + k6, k + 10, l1);
                         }
 
                         for (l10 = 0; l10 < 10; ++l10)
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i, j + k6, k + l10, l1);
                         }
 
                         for (l10 = 0; l10 < 10; ++l10)
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 8, j + k6, k + l10, l1);
                         }
                     }
@@ -174,25 +160,21 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                         {
                             for (l10 = 0; l10 < 8; ++l10)
                             {
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + l10, j + k6 + 4, k, l1);
                             }
 
                             for (l10 = 0; l10 < 9; ++l10)
                             {
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + l10, j + k6 + 4, k + 10, l1);
                             }
 
                             for (l10 = 0; l10 < 10; ++l10)
                             {
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i, j + k6 + 4, k + l10, l1);
                             }
 
                             for (l10 = 0; l10 < 10; ++l10)
                             {
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 8, j + k6 + 4, k + l10, l1);
                             }
                         }
@@ -204,25 +186,21 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                         {
                             for (l10 = 0; l10 < 8; ++l10)
                             {
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + l10, j + k6 + 8, k, l1);
                             }
 
                             for (l10 = 0; l10 < 9; ++l10)
                             {
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + l10, j + k6 + 8, k + 10, l1);
                             }
 
                             for (l10 = 0; l10 < 10; ++l10)
                             {
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i, j + k6 + 8, k + l10, l1);
                             }
 
                             for (l10 = 0; l10 < 10; ++l10)
                             {
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 8, j + k6 + 8, k + l10, l1);
                             }
                         }
@@ -234,7 +212,6 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                     {
                         for (k6 = 0; k6 < 99; ++k6)
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + j4, j + 8, k + k4, l1);
                             ++j4;
                             if (j4 == 9)
@@ -251,7 +228,6 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                     {
                         for (k6 = 0; k6 < 99; ++k6)
                         {
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + j4, j + 12, k + k4, l1);
                             ++j4;
                             if (j4 == 9)
@@ -276,13 +252,11 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                             {
                                 if (l10 == 0 || l10 == 6)
                                 {
-                                    var10000 = this.genHelper;
                                     RuinGenHelper.setBlock(i + l10 + 1, j + 5, k + i12 + 1, Blocks.bookshelf);
                                 }
 
                                 if (i12 == 0 || i12 == 8)
                                 {
-                                    var10000 = this.genHelper;
                                     RuinGenHelper.setBlock(i + l10 + 1, j + 5, k + i12 + 1, Blocks.bookshelf);
                                 }
 
@@ -304,13 +278,11 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                             {
                                 if (l10 == 0 || l10 == 6)
                                 {
-                                    var10000 = this.genHelper;
                                     RuinGenHelper.setBlock(i + l10 + 1, j + 9, k + i12 + 1, Blocks.furnace);
                                 }
 
                                 if (i12 == 0 || i12 == 8)
                                 {
-                                    var10000 = this.genHelper;
                                     RuinGenHelper.setBlock(i + l10 + 1, j + 9, k + i12 + 1, Blocks.furnace);
                                 }
 
@@ -338,13 +310,11 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                                 {
                                     if (i12 == 0 || i12 == 6)
                                     {
-                                        var10000 = this.genHelper;
                                         RuinGenHelper.setBlock(i + i12 + 1, j + 5 + l10, k + flag3 + 1, Blocks.bookshelf);
                                     }
 
                                     if (flag3 == 0 || flag3 == 8)
                                     {
-                                        var10000 = this.genHelper;
                                         RuinGenHelper.setBlock(i + i12 + 1, j + 5 + l10, k + flag3 + 1, Blocks.bookshelf);
                                     }
 
@@ -356,29 +326,17 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                                     }
                                 }
 
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 3, j + 5, k + 3, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 4, j + 5, k + 3, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 5, j + 5, k + 3, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 3, j + 5, k + 4, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 4, j + 5, k + 4, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 5, j + 5, k + 4, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 3, j + 5, k + 6, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 4, j + 5, k + 6, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 5, j + 5, k + 6, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 3, j + 5, k + 7, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 4, j + 5, k + 7, Blocks.planks);
-                                var10000 = this.genHelper;
                                 RuinGenHelper.setBlock(i + 5, j + 5, k + 7, Blocks.planks);
                             }
                         }
@@ -394,13 +352,11 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                                 {
                                     if (i12 == 0 || i12 == 6)
                                     {
-                                        var10000 = this.genHelper;
                                         RuinGenHelper.setBlock(i + i12 + 1, j + 9 + l10, k + flag3 + 1, Blocks.bookshelf);
                                     }
 
                                     if (flag3 == 0 || flag3 == 8)
                                     {
-                                        var10000 = this.genHelper;
                                         RuinGenHelper.setBlock(i + i12 + 1, j + 9 + l10, k + flag3 + 1, Blocks.bookshelf);
                                     }
 
@@ -413,76 +369,46 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                                 }
                             }
 
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 3, j + 9, k + 3, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 4, j + 9, k + 3, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 5, j + 9, k + 3, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 3, j + 9, k + 4, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 4, j + 9, k + 4, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 5, j + 9, k + 4, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 3, j + 9, k + 6, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 4, j + 9, k + 6, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 5, j + 9, k + 6, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 3, j + 9, k + 7, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 4, j + 9, k + 7, Blocks.planks);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + 5, j + 9, k + 7, Blocks.planks);
                         }
                     }
 
                     if (i4 > 1)
                     {
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 4, j + 9, k + 5, Blocks.torch);
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 4, j + 10, k + 1, Blocks.torch);
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 1, j + 10, k + 5, Blocks.torch);
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 7, j + 10, k + 5, Blocks.torch);
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 4, j + 10, k + 9, Blocks.torch);
                     }
 
                     if (i4 > 0)
                     {
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 4, j + 5, k + 5, Blocks.torch);
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 4, j + 6, k + 1, Blocks.torch);
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 1, j + 6, k + 5, Blocks.torch);
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 7, j + 6, k + 5, Blocks.torch);
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(i + 4, j + 6, k + 9, Blocks.torch);
                     }
 
-                    var10000 = this.genHelper;
                     RuinGenHelper.setBlock(i + 4, j + 1, k, Blocks.air);
-                    var10000 = this.genHelper;
                     RuinGenHelper.setBlock(i + 4, j + 2, k, Blocks.air);
-                    var10000 = this.genHelper;
                     RuinGenHelper.setBlock(i + 4, j + 1, k + 5, Blocks.torch);
-                    var10000 = this.genHelper;
                     RuinGenHelper.setBlock(i + 3, j + 2, k + 1, Blocks.torch);
-                    var10000 = this.genHelper;
                     RuinGenHelper.setBlock(i + 5, j + 2, k + 1, Blocks.torch);
-                    var10000 = this.genHelper;
                     RuinGenHelper.setBlock(i + 1, j + 2, k + 5, Blocks.torch);
-                    var10000 = this.genHelper;
                     RuinGenHelper.setBlock(i + 7, j + 2, k + 5, Blocks.torch);
-                    var10000 = this.genHelper;
                     RuinGenHelper.setBlock(i + 4, j + 2, k + 9, Blocks.torch);
                     l10 = random.nextInt(24) + 16;
 
@@ -494,55 +420,30 @@ public class RuinRuinedCiv2 extends Ruin implements IWorldGenerator
                             l13 = random.nextInt(9);
                             int i14 = random.nextInt(16);
                             int j14 = random.nextInt(11);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 - 1, j + i14, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 + 1, j + i14, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14, k + j14 + 1, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14, k + j14 - 1, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 - 1, j + i14 - 1, k + j14 - 1, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 + 1, j + i14 + 1, k + j14 + 1, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 - 1, j + i14, k + j14 + 1, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 + 1, j + i14, k + j14 - 1, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 - 2, j + i14, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 + 2, j + i14, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14, k + j14 + 2, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14, k + j14 - 2, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14 - 2, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14 - 1, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 - 1, j + i14 - 1, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 + 1, j + i14 - 1, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14 - 1, k + j14 + 1, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14 - 1, k + j14 - 1, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14 + 1, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14 + 2, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 - 1, j + i14 + 1, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13 + 1, j + i14 + 1, k + j14, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14 + 1, k + j14 + 1, Blocks.air);
-                            var10000 = this.genHelper;
                             RuinGenHelper.setBlock(i + l13, j + i14 + 1, k + j14 - 1, Blocks.air);
                         }
                     }
