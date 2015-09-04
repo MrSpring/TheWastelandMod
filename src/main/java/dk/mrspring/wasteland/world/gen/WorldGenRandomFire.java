@@ -1,12 +1,9 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package dk.mrspring.wasteland.world.gen;
 
 import dk.mrspring.wasteland.config.ModConfig;
+import dk.mrspring.wasteland.ruin.RuinGenHelper;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
@@ -19,12 +16,14 @@ public class WorldGenRandomFire extends WorldGenerator
         super(true);
     }
 
-    public boolean generate(World world, Random rand, int x, int y, int z)
+    public boolean generate(World world, Random rand, BlockPos pos)
     {
-        if (world.getBlock(x, y, z).equals(ModConfig.getSurfaceBlock()))
+        RuinGenHelper.setWorld(world);
+        int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+        if (RuinGenHelper.getBlock(x, y, z).equals(ModConfig.getSurfaceBlock()))
         {
-            world.setBlock(x, y, z, Blocks.netherrack);
-            world.setBlock(x, y + 1, z, Blocks.fire);
+            RuinGenHelper.setBlock(x, y, z, Blocks.netherrack);
+            RuinGenHelper.setBlock(x, y + 1, z, Blocks.fire);
             return true;
         } else
         {

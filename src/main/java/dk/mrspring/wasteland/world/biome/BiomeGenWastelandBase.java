@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package dk.mrspring.wasteland.world.biome;
 
 import dk.mrspring.wasteland.config.ModConfig;
@@ -21,7 +16,6 @@ public class BiomeGenWastelandBase extends BiomeGenBase
     public static final Height height_Wasteland = new Height(0.1F, 0.05F);
     public static final Height height_WastelandCity = new Height(0.09F, 0.01F);
     public static final Height height_WastelandMountains = new Height(1.0F, 0.5F);
-    private static int lastID = 0;
 
     public BiomeGenWastelandBase(int par1ID, String par2Name, Height biomeHeight)
     {
@@ -31,7 +25,6 @@ public class BiomeGenWastelandBase extends BiomeGenBase
         this.setHeight(biomeHeight);
         super.theBiomeDecorator = new BiomeDecoratorWasteland();
         super.waterColorMultiplier = 3376435;
-        ++lastID;
         this.loadBiome();
     }
 
@@ -56,14 +49,13 @@ public class BiomeGenWastelandBase extends BiomeGenBase
 
     public BiomeGenWastelandBase setTopBlock(Block block, int meta)
     {
-        super.topBlock = block;
-        super.field_150604_aj = meta;
+        super.topBlock = block.getStateFromMeta(meta);
         return this;
     }
 
     public BiomeGenWastelandBase setFillerBlock(Block block)
     {
-        super.fillerBlock = block;
+        super.fillerBlock = block.getDefaultState();
         return this;
     }
 

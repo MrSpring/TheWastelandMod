@@ -10,6 +10,7 @@ import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.ruin.*;
 import dk.mrspring.wasteland.utils.Vector;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -44,21 +45,21 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
         super.treesPerChunk = -999;
     }
 
-    public void decorateChunk(World world, Random rand, BiomeGenBase biome, int chunkX, int chunkZ)
+    @Override
+    public void decorate(World world, Random rand, BiomeGenBase biome, BlockPos pos)
     {
         if (super.currentWorld == null)
         {
             super.currentWorld = world;
             super.randomGenerator = rand;
-            super.chunk_X = chunkX;
-            super.chunk_Z = chunkZ;
+            super.field_180294_c = pos;
             this.genDecorations(biome);
             super.currentWorld = null;
             super.randomGenerator = null;
         }
-
     }
 
+    @Override
     protected void genDecorations(BiomeGenBase biome)
     {
         super.genDecorations(biome);
@@ -76,7 +77,6 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
         {
             this.decorateRadioactive(rand);
         }
-
     }
 
     private void decorateWasteland(Random rand)
@@ -86,11 +86,12 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
         int x;
         int z;
         int pos;
+        RuinGenHelper.setWorld(super.currentWorld);
         for (pos = 0; doGen && pos < 1; ++pos)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            int y = super.currentWorld.getHeightValue(x, z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            int y = RuinGenHelper.getHeightValue(x, z);
             this.lakeGen.generate(super.currentWorld, super.randomGenerator, x, y, z);
             if (rand.nextInt(6) < 5)
             {
@@ -102,42 +103,45 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
 
         for (pos = 0; doGen && pos < this.firePerChunk; ++pos)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            this.randomFireGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            this.randomFireGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, RuinGenHelper.getHeightValue(x, z), z));
         }
 
         doGen = rand.nextInt(ModConfig.wastelandRuinRarirty * 3) == 0;
         if (doGen)
         {
-            Vector var8 = new Vector(super.chunk_X + super.randomGenerator.nextInt(16), 0, super.chunk_Z + super.randomGenerator.nextInt(16));
+            Vector var8 = new Vector(
+                    super.field_180294_c.getX() + super.randomGenerator.nextInt(16),
+                    0,
+                    super.field_180294_c.getZ() + super.randomGenerator.nextInt(16));
 
             for (int i = 0; i < RuinVillageGenerator.villageNum; ++i)
             {
-                doGen = doGen && Vector.VtoVlengthXZ(var8, (Vector) RuinVillageGenerator.villageLocation.get(i)) > 48.0D;
+                doGen = doGen && Vector.VtoVlengthXZ(var8, RuinVillageGenerator.villageLocation.get(i)) > 48.0D;
             }
 
             if (doGen)
             {
-                this.house.generate(super.currentWorld, super.randomGenerator, var8.X, super.currentWorld.getHeightValue(var8.X, var8.Z) - 1, var8.Z);
+                this.house.generate(super.currentWorld, super.randomGenerator, var8.X, RuinGenHelper.getHeightValue(var8.X, var8.Z) - 1, var8.Z);
             }
         }
 
         doGen = rand.nextInt(ModConfig.wastelandRuinRarirty) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            this.randomRubbleGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            this.randomRubbleGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, RuinGenHelper.getHeightValue(x, z), z));
         }
 
         doGen = rand.nextInt(ModConfig.wastelandTreeSpawnRate * 15) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
             this.deadTreeGen.setTreeType(Blocks.log, 0);
-            this.deadTreeGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            this.deadTreeGen.generate(super.currentWorld, super.randomGenerator, x, RuinGenHelper.getHeightValue(x, z), z);
         }
 
     }
@@ -150,9 +154,9 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
         int z;
         for (int i = 0; doGen && i < 1; ++i)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            int y = super.currentWorld.getHeightValue(x, z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            int y = RuinGenHelper.getHeightValue(x, z);
             this.lakeGen.generate(super.currentWorld, super.randomGenerator, x, y, z);
             if (rand.nextInt(6) < 5)
             {
@@ -163,26 +167,26 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
         doGen = rand.nextInt(ModConfig.mountainRuinRarity * 2) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16);
-            z = super.chunk_Z + super.randomGenerator.nextInt(16);
-            this.temple.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16);
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16);
+            this.temple.generate(super.currentWorld, super.randomGenerator, x, RuinGenHelper.getHeightValue(x, z), z);
         }
 
         doGen = rand.nextInt(ModConfig.mountainRuinRarity * 3) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            this.randomRubbleGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            this.randomRubbleGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, RuinGenHelper.getHeightValue(x, z), z));
         }
 
         doGen = rand.nextInt(ModConfig.wastelandTreeSpawnRate * 25) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16);
-            z = super.chunk_Z + super.randomGenerator.nextInt(16);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16);
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16);
             this.deadTreeGen.setTreeType(Blocks.log, 0);
-            this.deadTreeGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            this.deadTreeGen.generate(super.currentWorld, super.randomGenerator, x, RuinGenHelper.getHeightValue(x, z), z);
         }
 
     }
@@ -195,9 +199,9 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
         int z;
         for (int treesPerChunk = 0; doGen && treesPerChunk < 1; ++treesPerChunk)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            int y = super.currentWorld.getHeightValue(x, z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            int y = RuinGenHelper.getHeightValue(x, z);
             this.lakeGen.generate(super.currentWorld, super.randomGenerator, x, y, z);
             if (rand.nextInt(6) < 5)
             {
@@ -208,25 +212,25 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
         doGen = rand.nextInt(ModConfig.forestRuinRarity) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            this.randomRubbleGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            this.randomRubbleGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, RuinGenHelper.getHeightValue(x, z), z));
         }
 
         doGen = rand.nextInt(ModConfig.forestRuinRarity * 3) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16);
-            z = super.chunk_Z + super.randomGenerator.nextInt(16);
-            this.tent.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z) - 1, z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16);
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16);
+            this.tent.generate(super.currentWorld, super.randomGenerator, x, RuinGenHelper.getHeightValue(x, z) - 1, z);
         }
 
         doGen = rand.nextInt(ModConfig.forestRuinRarity * 2) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16);
-            z = super.chunk_Z + super.randomGenerator.nextInt(16);
-            this.treeHouse.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z) - 1, z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16);
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16);
+            this.treeHouse.generate(super.currentWorld, super.randomGenerator, x, RuinGenHelper.getHeightValue(x, z) - 1, z);
         }
 
         doGen = rand.nextInt(ModConfig.wastelandTreeSpawnRate) == 0;
@@ -234,10 +238,10 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
 
         for (int i = 0; doGen && i < var8; ++i)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16);
-            z = super.chunk_Z + super.randomGenerator.nextInt(16);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16);
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16);
             this.deadTreeGen.setTreeType(ModConfig.getWoodType(super.randomGenerator));
-            this.deadTreeGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            this.deadTreeGen.generate(super.currentWorld, super.randomGenerator, x, RuinGenHelper.getHeightValue(x, z), z);
         }
 
     }
@@ -251,9 +255,9 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
         int pos;
         for (pos = 0; doGen && pos < 1; ++pos)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            int y = super.currentWorld.getHeightValue(x, z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            int y = RuinGenHelper.getHeightValue(x, z);
             this.lakeGen.generate(super.currentWorld, super.randomGenerator, x, y, z);
             this.field_76809_f.generate(super.currentWorld, super.randomGenerator, x, y, z);
         }
@@ -262,15 +266,15 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
 
         for (pos = 0; doGen && pos < 1; ++pos)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            this.randomFireGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            this.randomFireGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, RuinGenHelper.getHeightValue(x, z), z));
         }
 
         doGen = rand.nextInt(ModConfig.wastelandRuinRarirty * 5) == 0;
         if (doGen)
         {
-            Vector var8 = new Vector(super.chunk_X + super.randomGenerator.nextInt(16), 0, super.chunk_Z + super.randomGenerator.nextInt(16));
+            Vector var8 = new Vector(super.field_180294_c.getX() + super.randomGenerator.nextInt(16), 0, super.field_180294_c.getZ() + super.randomGenerator.nextInt(16));
 
             for (int i = 0; i < RuinVillageGenerator.villageNum; ++i)
             {
@@ -279,25 +283,25 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
 
             if (doGen)
             {
-                this.house.generate(super.currentWorld, super.randomGenerator, var8.X, super.currentWorld.getHeightValue(var8.X, var8.Z) - 1, var8.Z);
+                this.house.generate(super.currentWorld, super.randomGenerator, var8.X, RuinGenHelper.getHeightValue(var8.X, var8.Z) - 1, var8.Z);
             }
         }
 
         doGen = rand.nextInt(ModConfig.wastelandRuinRarirty * 2) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
-            this.randomRubbleGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
+            this.randomRubbleGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, RuinGenHelper.getHeightValue(x, z), z));
         }
 
         doGen = rand.nextInt(ModConfig.wastelandTreeSpawnRate * 75) == 0;
         if (doGen)
         {
-            x = super.chunk_X + super.randomGenerator.nextInt(16) + 8;
-            z = super.chunk_Z + super.randomGenerator.nextInt(16) + 8;
+            x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
+            z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
             this.deadTreeGen.setTreeType(Blocks.log, 0);
-            this.deadTreeGen.generate(super.currentWorld, super.randomGenerator, x, super.currentWorld.getHeightValue(x, z), z);
+            this.deadTreeGen.generate(super.currentWorld, super.randomGenerator, x, RuinGenHelper.getHeightValue(x, z), z);
         }
 
     }
