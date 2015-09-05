@@ -13,6 +13,7 @@ import dk.mrspring.wasteland.world.gen.WorldGenWastelandClay;
 import dk.mrspring.wasteland.world.gen.WorldGenWastelandLake;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -59,10 +60,10 @@ public class RuinedCity
                     z = CityGenerator.getWorldHeight(world, t, x);
                     WorldGenWastelandLake y = new WorldGenWastelandLake(random.nextInt(5) == 0 ? Blocks.water : ModConfig.getlakeLiquid());
                     WorldGenWastelandClay tree = new WorldGenWastelandClay(3);
-                    genLake = !y.generate(world, random, t, z, x);
+                    genLake = !y.generate(world, random, new BlockPos(t, z, x));
                     if (!genLake && random.nextInt(6) < 5)
                     {
-                        tree.generate(world, random, t, z, x);
+                        tree.generate(world, random, new BlockPos(t, z, x));
                     }
                 }
 

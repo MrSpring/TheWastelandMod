@@ -6,8 +6,10 @@
 package dk.mrspring.wasteland.world.gen;
 
 import dk.mrspring.wasteland.config.ModConfig;
+import dk.mrspring.wasteland.ruin.RuinGenHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenBigTree;
@@ -130,6 +132,7 @@ public class WorldGenWastelandBigTree extends WorldGenBigTree
         int[] var11 = new int[]{0, 0, 0};
         int var12 = -var7;
         int var13 = -var7;
+        RuinGenHelper.setWorld(this.field_76506_c);
 
         label33:
         for (var11[par5] = var10[par5]; var12 <= var7; ++var12)
@@ -153,13 +156,14 @@ public class WorldGenWastelandBigTree extends WorldGenBigTree
                     } else
                     {
                         var11[var9] = var10[var9] + var13;
-                        Block var14 = this.field_76506_c.getBlock(var11[0], var11[1], var11[2]);
+                        Block var14 = RuinGenHelper.getBlock(var11[0], var11[1], var11[2]);
                         if (var14 != Blocks.air && var14 != Blocks.leaves)
                         {
                             ++var13;
                         } else
                         {
-                            this.setBlockAndNotifyAdequately(this.field_76506_c, var11[0], var11[1], var11[2], par6, 0);
+//                            this.setBlockAndNotifyAdequately(this.field_76506_c, var11[0], var11[1], var11[2], par6, 0);
+                            this.func_175905_a(this.field_76506_c, new BlockPos(var11[0], var11[1], var11[2]), par6, 0);
                             ++var13;
                         }
                     }
@@ -264,7 +268,8 @@ public class WorldGenWastelandBigTree extends WorldGenBigTree
                     }
                 }
 
-                this.setBlockAndNotifyAdequately(this.field_76506_c, var14[0], var14[1], var14[2], par3, var17 + meta);
+//                this.setBlockAndNotifyAdequately(this.field_76506_c, var14[0], var14[1], var14[2], par3, var17 + meta);
+                this.func_175905_a(this.field_76506_c, new BlockPos(var14[0], var14[1], var14[2]), par3, var17 + meta);
             }
         }
 
@@ -324,6 +329,8 @@ public class WorldGenWastelandBigTree extends WorldGenBigTree
         int[] var3 = new int[]{0, 0, 0};
         byte var4 = 0;
 
+        RuinGenHelper.setWorld(this.field_76506_c);
+
         byte var5;
         for (var5 = 0; var4 < 3; ++var4)
         {
@@ -361,7 +368,7 @@ public class WorldGenWastelandBigTree extends WorldGenBigTree
                 var13[var5] = par1ArrayOfInteger[var5] + var14;
                 var13[var6] = MathHelper.floor_double((double) par1ArrayOfInteger[var6] + (double) var14 * var9);
                 var13[var7] = MathHelper.floor_double((double) par1ArrayOfInteger[var7] + (double) var14 * var11);
-                Block var16 = this.field_76506_c.getBlock(var13[0], var13[1], var13[2]);
+                Block var16 = RuinGenHelper.getBlock(var13[0], var13[1], var13[2]);
                 if (var16 != Blocks.air && var16 != Blocks.leaves)
                 {
                     break;
@@ -374,7 +381,8 @@ public class WorldGenWastelandBigTree extends WorldGenBigTree
 
     boolean validBigTreeLocation()
     {
-        Block var3 = this.field_76506_c.getBlock(this.field_76503_d[0], this.field_76503_d[1] - 1, this.field_76503_d[2]);
+        RuinGenHelper.setWorld(this.field_76506_c);
+        Block var3 = RuinGenHelper.getBlock(this.field_76503_d[0], this.field_76503_d[1] - 1, this.field_76503_d[2]);
         return var3.equals(ModConfig.getSurfaceBlock());
     }
 

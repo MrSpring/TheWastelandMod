@@ -37,12 +37,12 @@ public class ProgressGui extends Gui
         float f = (float) (colour >> 16 & 255) / 255.0F;
         float f1 = (float) (colour >> 8 & 255) / 255.0F;
         float f2 = (float) (colour & 255) / 255.0F;
-        Tessellator tessellator = Tessellator.instance;
+        Tessellator tessellator = Tessellator.getInstance();
         GL11.glEnable(3042);
         GL11.glDisable(3553);
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glColor4f(f, f1, f2, f3);
-        tessellator.startDrawingQuads();
+        tessellator.getWorldRenderer().startDrawingQuads();
         double[] rX = new double[4];
         double[] rY = new double[4];
         int count = 0;
@@ -58,10 +58,10 @@ public class ProgressGui extends Gui
             rY[2] = Math.sin(angle + angleInc + angleOffset) * (double) rInner;
             rX[3] = Math.cos(angle + angleOffset) * (double) rInner;
             rY[3] = Math.sin(angle + angleOffset) * (double) rInner;
-            tessellator.addVertex(rX[0] + x, rY[0] + y, 0.0D);
-            tessellator.addVertex(rX[3] + x, rY[3] + y, 0.0D);
-            tessellator.addVertex(rX[2] + x, rY[2] + y, 0.0D);
-            tessellator.addVertex(rX[1] + x, rY[1] + y, 0.0D);
+            tessellator.getWorldRenderer().addVertex(rX[0] + x, rY[0] + y, 0.0D);
+            tessellator.getWorldRenderer().addVertex(rX[3] + x, rY[3] + y, 0.0D);
+            tessellator.getWorldRenderer().addVertex(rX[2] + x, rY[2] + y, 0.0D);
+            tessellator.getWorldRenderer().addVertex(rX[1] + x, rY[1] + y, 0.0D);
             angle += angleInc;
         }
 

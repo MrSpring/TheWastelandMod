@@ -5,6 +5,7 @@
 
 package dk.mrspring.wasteland.config;
 
+import dk.mrspring.wasteland.items.ItemRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.config.Configuration;
@@ -42,6 +43,9 @@ public class ModConfig
     public static int[] spawnChance;
     public static String[] mobName;
     public static int[][] woodTypes;
+
+    public static Block surfaceBlock = null;
+    public static Block lakeLiquid = null;
 
     public ModConfig()
     {
@@ -86,8 +90,15 @@ public class ModConfig
 
     private static Block getBlockFromString(String string)
     {
+        GameRegistry.UniqueIdentifier id = GameRegistry.findUniqueIdentifierFor(Blocks.dirt);
+//        System.out.println(id.toString());
         String[] modidAndName = string.split(":");
-        return modidAndName.length >= 2 ? GameRegistry.findBlock(modidAndName[0], modidAndName[1]) : null;
+//        System.out.println("Getting from: " + string);
+        Block block = modidAndName.length >= 2 ? GameRegistry.findBlock(modidAndName[0], modidAndName[1]) : null;
+//        System.out.println(block == null);
+        block = Block.getBlockFromName(string);
+//        System.out.println(block == null);
+        return block;
     }
 
     private static int getBlockMetaFromString(String string)
@@ -98,7 +109,16 @@ public class ModConfig
 
     public static Block getSurfaceBlock()
     {
-        return getBlockFromString(surfaceBlockString);
+        if (surfaceBlock == null)
+        {
+            surfaceBlock = getBlockFromString(surfaceBlockString);
+            if (surfaceBlock == null)
+            {
+                System.out.printf("Surface block: %s not found. Falling back to default.", surfaceBlockString);
+                surfaceBlock = Blocks.dirt;
+            }
+        }
+        return surfaceBlock;
     }
 
     public static int getSurfaceBlockMeta()
@@ -108,7 +128,16 @@ public class ModConfig
 
     public static Block getlakeLiquid()
     {
-        return getBlockFromString(lakeLiquidString);
+        if (lakeLiquid == null)
+        {
+            lakeLiquid = getBlockFromString(surfaceBlockString);
+            if (lakeLiquid == null)
+            {
+                System.out.printf("Lake liquid block: %s not found. Falling back to default.", lakeLiquidString);
+                lakeLiquid = ItemRegistry.radiationWasteBlock;
+            }
+        }
+        return lakeLiquid;
     }
 
     public static int getlakeLiquidMeta()

@@ -81,14 +81,10 @@ public class Wasteland
         RuinConfig.load(ruinConfig);
         CityLootConfig.load(cityConfig);
         int id = EntityRegistry.findGlobalUniqueEntityId();
-        EntityRegistry.registerGlobalEntityID(EntityDayZombie.class, "Day Zombie", id);
-        EntityRegistry.registerModEntity(EntityDayZombie.class, "Day Zombie", id, instance, 128, 1, true);
+        EntityRegistry.registerGlobalEntityID(EntityDayZombie.class, "DayZombie", id);
+        EntityRegistry.registerModEntity(EntityDayZombie.class, "DayZombie", id, instance, 128, 1, true);
         items = new ItemRegistry();
-        if (event.getSide().isClient())
-        {
-            registerRendering();
-            MinecraftForge.EVENT_BUS.register(new GuiEventHandler());
-        }
+
 
         villageGenerator = new RuinVillageGenerator();
         cityGenerator = new CityGenerator();
@@ -102,6 +98,11 @@ public class Wasteland
     {
         wastelandWorldType = new WorldTypeWasteland("wasteland");
         WastelandGeneratorInfo.createDefault();
+        if (event.getSide().isClient())
+        {
+            registerRendering();
+            MinecraftForge.EVENT_BUS.register(new GuiEventHandler());
+        }
     }
 
     @Mod.EventHandler
@@ -117,7 +118,6 @@ public class Wasteland
     private static void registerRendering()
     {
         RenderingRegistry.registerEntityRenderingHandler(EntityDayZombie.class, new RenderDayZombie(Minecraft.getMinecraft().getRenderManager()));
-        ModelLoader.setCustomStateMapper(ItemRegistry.radiationWasteBlock, (new StateMap.Builder()).addPropertiesToIgnore(BlockFluidBase.LEVEL).build());
         register(ItemRegistry.radiationWasteBucket);
         register(ItemRegistry.radiationWasteBlock);
     }

@@ -37,27 +37,14 @@ import java.util.UUID;
 
 public class EntityDayZombie extends EntityMob
 {
-    /**
-     * The attribute which determines the chance that this mob will spawn reinforcements
-     */
     protected static final IAttribute reinforcementChance = (new RangedAttribute((IAttribute) null, "zombie.spawnReinforcements", 0.0D, 0.0D, 1.0D)).setDescription("Spawn Reinforcements Chance");
     private static final UUID babySpeedBoostUUID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
     private static final AttributeModifier babySpeedBoostModifier = new AttributeModifier(babySpeedBoostUUID, "Baby speed boost", 0.5D, 1);
     private final EntityAIBreakDoor breakDoor = new EntityAIBreakDoor(this);
-    /**
-     * Ticker used to determine the time remaining for this zombie to convert into a villager when cured.
-     */
     private int conversionTime;
     private boolean field_146076_bu = false;
-    /**
-     * The width of the entity
-     */
     private float zombieWidth = -1.0F;
-    /**
-     * The height of the the entity.
-     */
     private float zombieHeight;
-    private static final String __OBFID = "CL_00001702";
 
     public EntityDayZombie(World worldIn)
     {
@@ -97,9 +84,9 @@ public class EntityDayZombie extends EntityMob
     protected void entityInit()
     {
         super.entityInit();
-        this.getDataWatcher().addObject(12, Byte.valueOf((byte) 0));
-        this.getDataWatcher().addObject(13, Byte.valueOf((byte) 0));
-        this.getDataWatcher().addObject(14, Byte.valueOf((byte) 0));
+        this.getDataWatcher().addObject(12, (byte) 0);
+        this.getDataWatcher().addObject(13, (byte) 0);
+        this.getDataWatcher().addObject(14, (byte) 0);
     }
 
     /**
@@ -193,7 +180,7 @@ public class EntityDayZombie extends EntityMob
      */
     public void setVillager(boolean villager)
     {
-        this.getDataWatcher().updateObject(13, Byte.valueOf((byte) (villager ? 1 : 0)));
+        this.getDataWatcher().updateObject(13, (byte) (villager ? 1 : 0));
     }
 
     /**
@@ -202,6 +189,7 @@ public class EntityDayZombie extends EntityMob
      */
     public void onLivingUpdate()
     {
+        System.out.println("Living update at: x: " + posX + ", y: " + posY + ", z: " + posZ);
         if (this.worldObj.isDaytime() && !this.worldObj.isRemote && !this.isChild())
         {
             float f = this.getBrightness(1.0F);

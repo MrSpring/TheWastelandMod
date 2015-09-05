@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBucket;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -21,7 +22,9 @@ public class ItemRegistry
 
     public ItemRegistry()
     {
-        radiationWaste = (new Fluid("toxicWasteFluid")).setLuminosity(10).setDensity(1000).setViscosity(1500);
+        radiationWaste = (new Fluid("toxicWasteFluid",
+                new ResourceLocation("WLM", "blocks/toxic_still"),
+                new ResourceLocation("WLM", "blocks/toxic_flow"))).setLuminosity(10).setDensity(1000).setViscosity(1500);
         this.registerFluids();
         radiationWasteBlock = (BlockRadFluid) (new BlockRadFluid(radiationWaste, Material.water)).setUnlocalizedName("toxicWasteBlock");//setBlockName("toxicWasteBlock");
         this.registerBlocks();

@@ -9,11 +9,14 @@ import dk.mrspring.wasteland.WastelandBiomes;
 import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.ruin.*;
 import dk.mrspring.wasteland.utils.Vector;
+import net.minecraft.block.BlockStone;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.gen.ChunkProviderSettings;
+import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.util.Random;
@@ -53,6 +56,19 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
             super.currentWorld = world;
             super.randomGenerator = rand;
             super.field_180294_c = pos;
+            super.chunkProviderSettings = ChunkProviderSettings.Factory.func_177865_a("").func_177864_b();
+            this.dirtGen = new WorldGenMinable(Blocks.dirt.getDefaultState(), this.chunkProviderSettings.dirtSize);
+            this.gravelGen = new WorldGenMinable(Blocks.gravel.getDefaultState(), this.chunkProviderSettings.gravelSize);
+            this.graniteGen = new WorldGenMinable(Blocks.stone.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.GRANITE), this.chunkProviderSettings.graniteSize);
+            this.dioriteGen = new WorldGenMinable(Blocks.stone.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.DIORITE), this.chunkProviderSettings.dioriteSize);
+            this.andesiteGen = new WorldGenMinable(Blocks.stone.getDefaultState().withProperty(BlockStone.VARIANT, BlockStone.EnumType.ANDESITE), this.chunkProviderSettings.andesiteSize);
+            this.coalGen = new WorldGenMinable(Blocks.coal_ore.getDefaultState(), this.chunkProviderSettings.coalSize);
+            this.ironGen = new WorldGenMinable(Blocks.iron_ore.getDefaultState(), this.chunkProviderSettings.ironSize);
+            this.goldGen = new WorldGenMinable(Blocks.gold_ore.getDefaultState(), this.chunkProviderSettings.goldSize);
+            this.redstoneGen = new WorldGenMinable(Blocks.redstone_ore.getDefaultState(), this.chunkProviderSettings.redstoneSize);
+            this.diamondGen = new WorldGenMinable(Blocks.diamond_ore.getDefaultState(), this.chunkProviderSettings.diamondSize);
+            this.lapisGen = new WorldGenMinable(Blocks.lapis_ore.getDefaultState(), this.chunkProviderSettings.lapisSize);
+            System.out.println(randomGenerator == null);
             this.genDecorations(biome);
             super.currentWorld = null;
             super.randomGenerator = null;
@@ -92,10 +108,10 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
             x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
             z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
             int y = RuinGenHelper.getHeightValue(x, z);
-            this.lakeGen.generate(super.currentWorld, super.randomGenerator, x, y, z);
+            this.lakeGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, y, z));
             if (rand.nextInt(6) < 5)
             {
-                this.field_76809_f.generate(super.currentWorld, super.randomGenerator, x, y, z);
+                this.field_76809_f.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, y, z));
             }
         }
 
@@ -157,10 +173,10 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
             x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
             z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
             int y = RuinGenHelper.getHeightValue(x, z);
-            this.lakeGen.generate(super.currentWorld, super.randomGenerator, x, y, z);
+            this.lakeGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, y, z));
             if (rand.nextInt(6) < 5)
             {
-                this.field_76809_f.generate(super.currentWorld, super.randomGenerator, x, y, z);
+                this.field_76809_f.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, y, z));
             }
         }
 
@@ -202,10 +218,10 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
             x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
             z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
             int y = RuinGenHelper.getHeightValue(x, z);
-            this.lakeGen.generate(super.currentWorld, super.randomGenerator, x, y, z);
+            this.lakeGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, y, z));
             if (rand.nextInt(6) < 5)
             {
-                this.field_76809_f.generate(super.currentWorld, super.randomGenerator, x, y, z);
+                this.field_76809_f.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, y, z));
             }
         }
 
@@ -258,8 +274,8 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
             x = super.field_180294_c.getX() + super.randomGenerator.nextInt(16) + 8;
             z = super.field_180294_c.getZ() + super.randomGenerator.nextInt(16) + 8;
             int y = RuinGenHelper.getHeightValue(x, z);
-            this.lakeGen.generate(super.currentWorld, super.randomGenerator, x, y, z);
-            this.field_76809_f.generate(super.currentWorld, super.randomGenerator, x, y, z);
+            this.lakeGen.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, y, z));
+            this.field_76809_f.generate(super.currentWorld, super.randomGenerator, new BlockPos(x, y, z));
         }
 
         doGen = rand.nextInt(4) == 0;

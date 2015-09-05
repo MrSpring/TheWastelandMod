@@ -23,9 +23,7 @@ public class RenderDayZombie extends RenderBiped
 {
     private static final ResourceLocation zombieTextures = new ResourceLocation("textures/entity/zombie/zombie.png");
     private final ModelBiped field_82434_o;
-    private final List field_177121_n;
     private final List field_177122_o;
-    private static final String __OBFID = "CL_00001037";
 
     public RenderDayZombie(RenderManager p_i46127_1_)
     {
@@ -34,8 +32,6 @@ public class RenderDayZombie extends RenderBiped
         this.addLayer(new LayerHeldItem(this));
         LayerBipedArmor layerbipedarmor = new LayerBipedArmor(this)
         {
-            private static final String __OBFID = "CL_00002429";
-
             protected void func_177177_a()
             {
                 this.field_177189_c = new ModelZombie(0.5F, true);
@@ -47,13 +43,12 @@ public class RenderDayZombie extends RenderBiped
 
         this.removeLayer(layerbipedarmor);
         this.addLayer(new LayerVillagerArmor(this));
-        this.field_177121_n = Lists.newArrayList(this.layerRenderers);
     }
 
-    public void func_180579_a(EntityZombie p_180579_1_, double p_180579_2_, double p_180579_4_, double p_180579_6_, float p_180579_8_, float p_180579_9_)
+    public void func_180579_a(EntityDayZombie p_180579_1_, double x, double y, double z, float p_180579_8_, float p_180579_9_)
     {
         this.func_82427_a();
-        super.doRender(p_180579_1_, p_180579_2_, p_180579_4_, p_180579_6_, p_180579_8_, p_180579_9_);
+        super.doRender(p_180579_1_, x, y, z, p_180579_8_, p_180579_9_);
     }
 
     protected ResourceLocation func_180578_a()
@@ -68,7 +63,7 @@ public class RenderDayZombie extends RenderBiped
         this.modelBipedMain = (ModelBiped) this.mainModel;
     }
 
-    protected void rotateCorpse(EntityZombie p_77043_1_, float p_77043_2_, float p_77043_3_, float p_77043_4_)
+    protected void rotateCorpse(EntityDayZombie p_77043_1_, float p_77043_2_, float p_77043_3_, float p_77043_4_)
     {
         if (p_77043_1_.isConverting())
         {
@@ -94,12 +89,13 @@ public class RenderDayZombie extends RenderBiped
      */
     public void doRender(EntityLiving entity, double x, double y, double z, float p_76986_8_, float partialTicks)
     {
-        this.func_180579_a((EntityZombie) entity, x, y, z, p_76986_8_, partialTicks);
+        System.out.println("Render");
+        this.func_180579_a((EntityDayZombie) entity, x, y, z, p_76986_8_, partialTicks);
     }
 
     protected void rotateCorpse(EntityLivingBase p_77043_1_, float p_77043_2_, float p_77043_3_, float p_77043_4_)
     {
-        this.rotateCorpse((EntityZombie) p_77043_1_, p_77043_2_, p_77043_3_, p_77043_4_);
+        this.rotateCorpse((EntityDayZombie) p_77043_1_, p_77043_2_, p_77043_3_, p_77043_4_);
     }
 
     /**
@@ -110,7 +106,8 @@ public class RenderDayZombie extends RenderBiped
      */
     public void doRender(EntityLivingBase entity, double x, double y, double z, float p_76986_8_, float partialTicks)
     {
-        this.func_180579_a((EntityZombie) entity, x, y, z, p_76986_8_, partialTicks);
+        System.out.println("Render");
+        this.func_180579_a((EntityDayZombie) entity, x, y, z, p_76986_8_, partialTicks);
     }
 
     /**
@@ -129,6 +126,7 @@ public class RenderDayZombie extends RenderBiped
      */
     public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float partialTicks)
     {
-        this.func_180579_a((EntityZombie) entity, x, y, z, p_76986_8_, partialTicks);
+        System.out.println("Render x: "+x+", y: "+y+", z: "+z);
+        this.func_180579_a((EntityDayZombie) entity, x, y, z, p_76986_8_, partialTicks);
     }
 }
