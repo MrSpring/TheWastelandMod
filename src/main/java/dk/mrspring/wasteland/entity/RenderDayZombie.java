@@ -89,7 +89,7 @@ public class RenderDayZombie extends RenderBiped
      */
     public void doRender(EntityLiving entity, double x, double y, double z, float p_76986_8_, float partialTicks)
     {
-        System.out.println("Render");
+//        System.out.println("Render");
         this.func_180579_a((EntityDayZombie) entity, x, y, z, p_76986_8_, partialTicks);
     }
 
@@ -106,7 +106,7 @@ public class RenderDayZombie extends RenderBiped
      */
     public void doRender(EntityLivingBase entity, double x, double y, double z, float p_76986_8_, float partialTicks)
     {
-        System.out.println("Render");
+//        System.out.println("Render");
         this.func_180579_a((EntityDayZombie) entity, x, y, z, p_76986_8_, partialTicks);
     }
 
@@ -126,7 +126,7 @@ public class RenderDayZombie extends RenderBiped
      */
     public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float partialTicks)
     {
-        System.out.println("Render x: "+x+", y: "+y+", z: "+z);
+//        System.out.println("Render x: "+x+", y: "+y+", z: "+z);
         this.func_180579_a((EntityDayZombie) entity, x, y, z, p_76986_8_, partialTicks);
     }
 }

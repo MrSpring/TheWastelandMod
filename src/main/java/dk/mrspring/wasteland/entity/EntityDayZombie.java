@@ -189,7 +189,7 @@ public class EntityDayZombie extends EntityMob
      */
     public void onLivingUpdate()
     {
-        System.out.println("Living update at: x: " + posX + ", y: " + posY + ", z: " + posZ);
+//        System.out.println("Living update at: x: " + posX + ", y: " + posY + ", z: " + posZ);
         if (this.worldObj.isDaytime() && !this.worldObj.isRemote && !this.isChild())
         {
             float f = this.getBrightness(1.0F);

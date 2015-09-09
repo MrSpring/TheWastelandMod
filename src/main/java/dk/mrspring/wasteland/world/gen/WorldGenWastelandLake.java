@@ -110,7 +110,9 @@ public class WorldGenWastelandLake extends WorldGenerator
                     {
                         if (aboolean[(i1 * 16 + j2) * 8 + var32])
                         {
-                            RuinGenHelper.setBlock(x + i1, y + var32, z + j2, var32 >= 4 ? Blocks.air : this.field_150556_a, 0);
+                            Block block = var32 >= 4 ? Blocks.air : this.field_150556_a;
+                            System.out.println("Generating: x: " + pos.getX() + ", y: " + pos.getY() + ", z: " + pos.getZ() + ", is air: " + (block == Blocks.air));
+                            RuinGenHelper.setBlock(x + i1, y + var32, z + j2, block, 0);
                         }
                     }
                 }

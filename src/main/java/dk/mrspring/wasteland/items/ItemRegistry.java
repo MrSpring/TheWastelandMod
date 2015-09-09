@@ -42,11 +42,11 @@ public class ItemRegistry
 
     public void registerBlocks()
     {
-        GameRegistry.registerBlock(radiationWasteBlock, radiationWasteBlock.getUnlocalizedName());
+        GameRegistry.registerBlock(radiationWasteBlock, "toxicWasteBlock"/*radiationWasteBlock.getUnlocalizedName()*/);
     }
 
     public void registerItems()
     {
-        GameRegistry.registerItem(radiationWasteBucket, radiationWasteBucket.getUnlocalizedName());
+        GameRegistry.registerItem(radiationWasteBucket, "toxicWasteBucket"/*radiationWasteBucket.getUnlocalizedName()*/);
     }
 }

@@ -68,7 +68,6 @@ public class BiomeDecoratorWasteland extends BiomeDecorator
             this.redstoneGen = new WorldGenMinable(Blocks.redstone_ore.getDefaultState(), this.chunkProviderSettings.redstoneSize);
             this.diamondGen = new WorldGenMinable(Blocks.diamond_ore.getDefaultState(), this.chunkProviderSettings.diamondSize);
             this.lapisGen = new WorldGenMinable(Blocks.lapis_ore.getDefaultState(), this.chunkProviderSettings.lapisSize);
-            System.out.println(randomGenerator == null);
             this.genDecorations(biome);
             super.currentWorld = null;
             super.randomGenerator = null;
