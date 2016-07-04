@@ -1,10 +1,10 @@
 package dk.mrspring.wasteland.config;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModConfig {
 
@@ -76,7 +76,7 @@ public class ModConfig {
 
    private static Block getBlockFromString(String string) {
       String[] modidAndName = string.split(":");
-      return modidAndName.length >= 2?GameRegistry.findBlock(modidAndName[0], modidAndName[1]):null;
+      return modidAndName.length >= 2? GameRegistry.findBlock(modidAndName[0], modidAndName[1]):null;
    }
 
    private static int getBlockMetaFromString(String string) {

@@ -1,17 +1,14 @@
 package dk.mrspring.wasteland.world;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import dk.mrspring.wasteland.WastelandBiomes;
-import dk.mrspring.wasteland.world.WastelandGenLayerBiome;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ReportedException;
-import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeCache;
@@ -21,20 +18,22 @@ import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.WorldTypeEvent.InitBiomeGens;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldChunkManagerWasteland extends WorldChunkManager {
 
-   public static ArrayList allowedBiomes = new ArrayList(Arrays.asList(new BiomeGenBase[]{WastelandBiomes.apocalypse, WastelandBiomes.mountains, WastelandBiomes.forest}));
+   public static List<BiomeGenBase> allowedBiomes = new ArrayList<BiomeGenBase>(Arrays.asList(new BiomeGenBase[]{WastelandBiomes.apocalypse, WastelandBiomes.mountains, WastelandBiomes.forest}));
    private GenLayer genBiomes;
    private GenLayer biomeIndexLayer;
    private BiomeCache biomeCache;
-   private List biomesToSpawnIn;
+   private List<BiomeGenBase> biomesToSpawnIn;
    private static final String __OBFID = "CL_00000166";
 
 
    protected WorldChunkManagerWasteland() {
       this.biomeCache = new BiomeCache(this);
-      this.biomesToSpawnIn = new ArrayList();
+      this.biomesToSpawnIn = new ArrayList<BiomeGenBase>();
       this.biomesToSpawnIn.addAll(allowedBiomes);
    }
 
@@ -50,12 +49,12 @@ public class WorldChunkManagerWasteland extends WorldChunkManager {
       this(p_i1976_1_.getSeed(), p_i1976_1_.getWorldInfo().getTerrainType());
    }
 
-   public List getBiomesToSpawnIn() {
+   public List<BiomeGenBase> getBiomesToSpawnIn() {
       return this.biomesToSpawnIn;
    }
 
    public BiomeGenBase getBiomeGenAt(int p_76935_1_, int p_76935_2_) {
-      return this.biomeCache.getBiomeGenAt(p_76935_1_, p_76935_2_);
+      return this.biomeCache.func_180284_a(p_76935_1_,p_76935_2_, null);
    }
 
    public float[] getRainfall(float[] p_76936_1_, int p_76936_2_, int p_76936_3_, int p_76936_4_, int p_76936_5_) {
@@ -208,7 +207,7 @@ public class WorldChunkManagerWasteland extends WorldChunkManager {
       }
    }
 
-   public ChunkPosition findBiomePosition(int p_150795_1_, int p_150795_2_, int p_150795_3_, List p_150795_4_, Random p_150795_5_) {
+   public BlockPos findBiomePosition(int p_150795_1_, int p_150795_2_, int p_150795_3_, List p_150795_4_, Random p_150795_5_) {
       IntCache.resetIntCache();
       int l = p_150795_1_ - p_150795_3_ >> 2;
       int i1 = p_150795_2_ - p_150795_3_ >> 2;
@@ -217,7 +216,7 @@ public class WorldChunkManagerWasteland extends WorldChunkManager {
       int l1 = j1 - l + 1;
       int i2 = k1 - i1 + 1;
       int[] aint = this.genBiomes.getInts(l, i1, l1, i2);
-      ChunkPosition chunkposition = null;
+      BlockPos chunkposition = null;
       int j2 = 0;
 
       for(int k2 = 0; k2 < l1 * i2; ++k2) {
@@ -225,7 +224,7 @@ public class WorldChunkManagerWasteland extends WorldChunkManager {
          int i3 = i1 + k2 / l1 << 2;
          BiomeGenBase biomegenbase = BiomeGenBase.getBiome(aint[k2]);
          if(p_150795_4_.contains(biomegenbase) && (chunkposition == null || p_150795_5_.nextInt(j2 + 1) == 0)) {
-            chunkposition = new ChunkPosition(l2, 0, i3);
+            chunkposition = new BlockPos(l2, 0, i3);
             ++j2;
          }
       }

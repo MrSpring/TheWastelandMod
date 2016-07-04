@@ -146,12 +146,12 @@ public class RuinedCity {
             f = r.nextInt(odds) == 0;
             if(i < length / 2) {
                RuinGenHelper.setBlock(x + i, y1, z, f?surfaceBlock:roadBlock, f?surfaceBlockMeta:15);
-               clearAbove(x + i, y1 + 1, z, 5, world);
-               fillBelow(x + i, y1 - 1, z, 3, world);
+               clearAbove(new BlockPos(x + i, y1 + 1, z), 5, world);
+               fillBelow(new BlockPos(x + i, y1 - 1, z), 3, world);
             } else {
                RuinGenHelper.setBlock(x + i, y2, z, f?surfaceBlock:roadBlock, f?surfaceBlockMeta:15);
-               clearAbove(x + i, y2 + 1, z, 5, world);
-               fillBelow(x + i, y2 - 1, z, 3, world);
+               clearAbove(new BlockPos(x + i, y2 + 1, z), 5, world);
+               fillBelow(new BlockPos(x + i, y2 - 1, z), 3, world);
             }
          }
       } else {
@@ -159,32 +159,32 @@ public class RuinedCity {
             f = r.nextInt(odds) == 0;
             if(i < length / 2) {
                RuinGenHelper.setBlock(x, y1, z + i, f?surfaceBlock:roadBlock, f?surfaceBlockMeta:15);
-               clearAbove(x, y1 + 1, z + i, 5, world);
-               fillBelow(x, y1 - 1, z + i, 3, world);
+               clearAbove(new BlockPos(x, y1 + 1, z + i), 5, world);
+               fillBelow(new BlockPos(x, y1 - 1, z + i), 3, world);
             } else {
                RuinGenHelper.setBlock(x, y2, z + i, f?surfaceBlock:roadBlock, f?surfaceBlockMeta:15);
-               clearAbove(x, y2 + 1, z + i, 5, world);
-               fillBelow(x, y2 - 1, z + i, 3, world);
+               clearAbove(new BlockPos(x, y2 + 1, z + i), 5, world);
+               fillBelow(new BlockPos(x, y2 - 1, z + i), 3, world);
             }
          }
       }
 
    }
 
-   public static void clearAbove(int x, int y, int z, int d, World world) {
+   public static void clearAbove(BlockPos pos, int d, World world) {
       for(int i = 0; i < d; ++i) {
-         if(RuinGenHelper.getBlock(x, y + i, z) != Blocks.air) {
-            RuinGenHelper.setBlock(x, y + i, z, Blocks.air, 0);
+         if(RuinGenHelper.getBlock(pos.add(0, i, 0)) != Blocks.air) {
+            RuinGenHelper.setBlock(pos.add(0, i, 0), Blocks.air, 0);
          }
       }
 
    }
 
-   public static void fillBelow(int x, int y, int z, int d, World world) {
+   public static void fillBelow(BlockPos pos, int d, World world) {
       for(int i = 0; i < d; ++i) {
-         Block b = RuinGenHelper.getBlock(x, y - i, z);
+         Block b = RuinGenHelper.getBlock(pos.add(0, -i, 0));
          if(b == Blocks.air || b == Blocks.deadbush) {
-            RuinGenHelper.setBlock(x, y - i, z, Blocks.stone, 0);
+            RuinGenHelper.setBlock(pos.add(0, -i, 0), Blocks.stone, 0);
          }
       }
 

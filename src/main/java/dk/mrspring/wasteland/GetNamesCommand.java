@@ -1,11 +1,11 @@
 package dk.mrspring.wasteland;
 
-import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.fml.common.registry.GameData;
 
 public class GetNamesCommand extends CommandBase {
 
@@ -22,7 +22,7 @@ public class GetNamesCommand extends CommandBase {
          EntityPlayer player = (EntityPlayer)iCommandSender;
          ItemStack item = player.getCurrentEquippedItem();
          if(item != null) {
-            String itemName = GameData.getItemRegistry().getNameForObject(item.getItem());
+            String itemName = GameData.getItemRegistry().getNameForObject(item.getItem()).toString();
             String damage = item.getItemDamage() > 0?":" + String.valueOf(item.getItemDamage()):"";
             System.out.println(itemName + damage);
             player.addChatComponentMessage(new ChatComponentText(itemName + damage));

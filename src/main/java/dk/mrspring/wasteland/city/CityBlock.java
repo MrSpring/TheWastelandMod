@@ -1,8 +1,5 @@
 package dk.mrspring.wasteland.city;
 
-import dk.mrspring.wasteland.city.CityBuilding;
-import dk.mrspring.wasteland.city.MultiVector;
-import dk.mrspring.wasteland.city.RuinedCity;
 import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.items.LootStack;
 import dk.mrspring.wasteland.ruin.RuinGenHelper;
@@ -12,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class CityBlock {
@@ -89,7 +87,7 @@ public class CityBlock {
 
    }
 
-   public Vector getPositionFromCorner(int index) {
+   public BlockPos getPositionFromCorner(int index) {
       int w = this.area.width / 16;
       int l = this.area.length / 16;
       if(index >= 2 * (w + l)) {
@@ -112,13 +110,13 @@ public class CityBlock {
             z = (index - w - w - l) * 16;
          }
 
-         return new Vector(this.area.position.X + x, this.area.position.Y, this.area.position.Z + z);
+         return this.area.position.add(x, 0, z);//new BlockPos(this.area.position.X + x, this.area.position.Y, this.area.position.Z + z);
       }
    }
 
    public int getCornerFromPosition(Vector pos) {
-      int dX = pos.X - this.area.position.X;
-      int dZ = pos.Z - this.area.position.Z;
+      int dX = pos.X - this.area.position.getX();
+      int dZ = pos.Z - this.area.position.getZ();
       if(dX >= 0 && dZ >= 0 && dX <= this.area.width && dZ <= this.area.length) {
          int w = this.area.width / 16;
          int l = this.area.length / 16;
@@ -168,7 +166,7 @@ public class CityBlock {
             offsetZ = (this.area.length - building.length) / 2;
          }
 
-         building.generate(world, random, this.area.position.copy().add(new Vector(offsetX, 0, offsetZ)), rot1, cityColour);
+         building.generate(world, random, this.area.position.add(offsetX, 0, offsetZ), rot1, cityColour);
       }
 
    }
@@ -182,15 +180,15 @@ public class CityBlock {
       int i;
       for(rubble = roadWidth; rubble < this.area.length - roadWidth; ++rubble) {
          for(i = roadWidth; i < this.area.width - roadWidth; ++i) {
-            RuinGenHelper var10000 = this.genHelper;
-            RuinGenHelper.setBlock(this.area.position.X + i, this.area.position.Y, this.area.position.Z + rubble, surfaceBlock, surfaceBlockMeta);
-            RuinedCity.clearAbove(this.area.position.X + i, this.area.position.Y + 1, this.area.position.Z + rubble, 5, world);
-            RuinedCity.fillBelow(this.area.position.X + i, this.area.position.Y - 1, this.area.position.Z + rubble, 3, world);
+            RuinGenHelper.setBlock(this.area.position.add(i, 0, rubble), surfaceBlock, surfaceBlockMeta);
+            RuinedCity.clearAbove(this.area.position.add(i, 1, rubble), 5, world);
+            RuinedCity.fillBelow(this.area.position.add(i, -1, rubble), 3, world);
          }
       }
 
       rubble = this.area.length * this.area.width / 10;
 
+      RuinGenHelper.setWorld(world);
       for(i = 0; i < rubble; ++i) {
          int x = random.nextInt(this.area.width - 2 * roadWidth) + roadWidth;
          int z = random.nextInt(this.area.length - 2 * roadWidth) + roadWidth;
@@ -198,9 +196,9 @@ public class CityBlock {
             int type = random.nextInt(10);
             Block b = type == 0?Blocks.cobblestone:(type == 1?Blocks.stonebrick:(type == 2?Blocks.mossy_cobblestone:(type == 3?Blocks.glass:(type == 4?Blocks.gravel:surfaceBlock))));
             int m = type == 1?random.nextInt(3):(type > 4?surfaceBlockMeta:0);
-            world.setBlock(this.area.position.X + x, this.area.position.Y + 1, this.area.position.Z + z, b, m, 2);
+            RuinGenHelper.setBlock(this.area.position.add(x, 1, z), b, m);
          } else {
-            world.setBlock(this.area.position.X + x, this.area.position.Y, this.area.position.Z + z, Blocks.air, 0, 2);
+            RuinGenHelper.setBlock(this.area.position.add(x, 0, z), Blocks.air, 0);
          }
       }
 

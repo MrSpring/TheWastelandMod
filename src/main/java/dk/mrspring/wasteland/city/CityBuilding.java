@@ -24,6 +24,7 @@ import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class CityBuilding {
@@ -43,7 +44,7 @@ public class CityBuilding {
    public static LootStack midLoot;
    public static LootStack hardLoot;
    public static LootStack ultraLoot;
-   private Vector[] damageLoc;
+   private BlockPos[] damageLoc;
    private int[] damageSize;
    private int roofHeight;
    public static final Block surfaceBlock = ModConfig.getSurfaceBlock();
@@ -82,30 +83,28 @@ public class CityBuilding {
       int inc = (this.height - this.roofHeight) / num;
       int maxR = this.width / 2 + 1;
       int minR = this.width / 2 - 1;
-      this.damageLoc = new Vector[num];
+      this.damageLoc = new BlockPos[num];
       this.damageSize = new int[num];
 
       for(int i = 0; i < num; ++i) {
-         this.damageLoc[i] = Vector.randomVector2D(rand, maxR, minR).add(new Vector(this.width / 2, 0, this.length / 2));
-         this.damageLoc[i].Y = rand.nextInt(inc) + inc * i;
+         this.damageLoc[i] = Vector.randomVector2D(rand, maxR, minR).add(this.width / 2, rand.nextInt(inc) + inc * i, this.length / 2);
          this.damageSize[i] = rand.nextInt(maxSize - minSize + 1) + minSize;
       }
 
    }
 
-   public void generate(World world, Random random, Vector pos, int rot, int cityColour) {
-      RuinGenHelper var10000 = this.genHelper;
+   public void generate(World world, Random random, BlockPos pos, int rot, int cityColour) {
       RuinGenHelper.setWorld(world);
       int count = 0;
       boolean doGen = true;
-      Vector p = new Vector(0, 0, 0);
+      BlockPos p = new BlockPos(0, 0, 0);
 
       for(short j = 0; j < this.height; ++j) {
-         p.Y = j;
+         p = new BlockPos(p.getX(), j, p.getZ());
 
          for(short k = 0; k < this.length; ++k) {
             for(short i = 0; i < this.width; ++i) {
-               this.rotateVector(p, rot, i, k, this.width, this.length);
+               p = this.rotateVector(p, rot, i, k, this.width, this.length);
                this.rotateBlock(this.blocks, this.data, count, rot);
                int meta;
                if(this.damageLoc != null) {
@@ -116,16 +115,13 @@ public class CityBuilding {
 
                if(doGen) {
                   if(this.blocks[count] == bedrockID) {
-                     var10000 = this.genHelper;
                      RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, surfaceBlock, surfaceBlockMeta);
                   } else if(this.blocks[count] == airID) {
                      if(p.Y > 0 && p.Y < 3) {
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.air);
                      }
                   } else if(this.blocks[count] == chestID) {
                      if(random.nextInt(10) != 0) {
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.chest, this.data[count]);
                         TileEntityChest var17 = (TileEntityChest)world.getTileEntity(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z);
                         LootStack var15 = this.setItems(random);
@@ -134,7 +130,6 @@ public class CityBuilding {
                   } else if(this.blocks[count] == spawnerID) {
                      if(random.nextInt(12) != 0) {
                         String var16 = ModConfig.getSpawnerCreature(random);
-                        var10000 = this.genHelper;
                         RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.mob_spawner);
                         TileEntityMobSpawner mobSpawner = (TileEntityMobSpawner)world.getTileEntity(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z);
                         mobSpawner.func_145881_a().setEntityName(var16);
@@ -146,13 +141,10 @@ public class CityBuilding {
                            if(random.nextInt(75) != 0) {
                               randomNumber = random.nextInt(10);
                               if(randomNumber == 0) {
-                                 var10000 = this.genHelper;
                                  RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.mossy_cobblestone);
                               } else if(randomNumber < 3) {
-                                 var10000 = this.genHelper;
                                  RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.cobblestone);
                               } else {
-                                 var10000 = this.genHelper;
                                  RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.stone);
                               }
                            }
@@ -160,50 +152,40 @@ public class CityBuilding {
                            if(random.nextInt(75) != 0) {
                               randomNumber = random.nextInt(10);
                               meta = randomNumber < 5?0:(randomNumber > 6?2:1);
-                              var10000 = this.genHelper;
                               RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.stonebrick, meta);
                            }
                         } else if(this.blocks[count] == sandStoneID) {
                            if(random.nextInt(65) != 0) {
                               randomNumber = random.nextInt(10);
                               meta = randomNumber < 4?0:2;
-                              var10000 = this.genHelper;
                               RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.sandstone, meta);
                            }
                         } else if(this.blocks[count] != glassID && this.blocks[count] != glassPaneID) {
                            if(this.blocks[count] != woolID && this.blocks[count] != stainedGlassID) {
                               if(this.blocks[count] == woodPlankID) {
                                  if(random.nextInt(40) != 0) {
-                                    var10000 = this.genHelper;
                                     RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.planks, this.data[count]);
                                  }
                               } else {
-                                 var10000 = this.genHelper;
                                  RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Block.getBlockById(this.blocks[count]), this.data[count]);
                               }
                            } else if(random.nextInt(40) != 0) {
                               if(this.data[count] != 0 && this.data[count] != 15 && this.data[count] != 8) {
-                                 var10000 = this.genHelper;
                                  RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Block.getBlockById(this.blocks[count]), cityColour);
                               } else {
-                                 var10000 = this.genHelper;
                                  RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Block.getBlockById(this.blocks[count]), this.data[count]);
                               }
                            }
                         } else if(random.nextInt(20) != 0) {
-                           var10000 = this.genHelper;
                            RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Block.getBlockById(this.blocks[count]), this.data[count]);
                         }
                      } else if(random.nextInt(50) != 0) {
                         randomNumber = random.nextInt(10);
                         if(randomNumber == 0) {
-                           var10000 = this.genHelper;
                            RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.stone);
                         } else if(randomNumber < 4) {
-                           var10000 = this.genHelper;
                            RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.mossy_cobblestone);
                         } else {
-                           var10000 = this.genHelper;
                            RuinGenHelper.setBlock(pos.X + p.X, pos.Y + p.Y, pos.Z + p.Z, Blocks.cobblestone);
                         }
                      }
@@ -218,21 +200,23 @@ public class CityBuilding {
 
    }
 
-   private void rotateVector(Vector p, int rot, short i, short k, int width, int length) {
+   private BlockPos rotateVector(BlockPos p, int rot, short i, short k, int width, int length) {
+      int x, z;
       if(rot == 1) {
-         p.X = k;
-         p.Z = width - i - 1;
+         x = k;
+         z = width - i - 1;
       } else if(rot == 2) {
-         p.X = width - i - 1;
-         p.Z = length - k - 1;
+         x = width - i - 1;
+         z = length - k - 1;
       } else if(rot == 3) {
-         p.X = length - k - 1;
-         p.Z = i;
+         x = length - k - 1;
+         z = i;
       } else {
-         p.X = i;
-         p.Z = k;
+         x = i;
+         z = k;
       }
 
+      return new BlockPos(x, p.getY(), z);
    }
 
    private void rotateBlock(byte[] blocks, byte[] data, int index, int rot) {

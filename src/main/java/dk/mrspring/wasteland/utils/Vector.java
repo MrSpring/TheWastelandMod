@@ -31,8 +31,8 @@ public class Vector {
       return this;
    }
 
-   private boolean equalsXZ(Vector v) {
-      return this.X == v.X && this.Z == v.Z;
+   public static boolean equalsXZ(BlockPos v1, BlockPos v2) {
+      return v1.getX() == v2.getX() && v1.getZ() == v2.getZ();
    }
 
    private boolean equals(Vector v) {
