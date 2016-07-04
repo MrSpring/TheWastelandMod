@@ -1,15 +1,16 @@
 package dk.mrspring.wasteland.utils;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import dk.mrspring.wasteland.GetBiomesCommand;
 import dk.mrspring.wasteland.client.ClientProxy;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +82,8 @@ public class Message implements IMessage
 
     public static Message createPlayerInfoMessage(EntityPlayer player)
     {
-        String playerName = player.getDisplayName();
-        Vector pos = new Vector((int) player.posX, (int) player.posY, (int) player.posZ);
+        String playerName = player.getDisplayName().getFormattedText();
+        BlockPos pos = player.getPosition();
 
         byte[] dataOut = new byte[12 + playerName.length() + 1];
 
@@ -91,7 +92,7 @@ public class Message implements IMessage
         int count = 1;
         for (int i = 0; i < 3; i++)
         {
-            int p = i == 1 ? pos.Y : i == 0 ? pos.X : pos.Z;
+            int p = i == 1 ? pos.getY() : i == 0 ? pos.getX() : pos.getZ();
 
             dataOut[count] = ((byte) ((p & 0xFF000000) >> 24));
             dataOut[(count + 1)] = ((byte) ((p & 0xFF0000) >> 16));
@@ -146,7 +147,7 @@ public class Message implements IMessage
             byte[] data = message.data;
             if (data[0] == 3)
             {
-                Vector pos = new Vector(Message.getInt(data, 1), Message.getInt(data, 5), Message.getInt(data, 9));
+                BlockPos pos = new BlockPos(Message.getInt(data, 1), Message.getInt(data, 5), Message.getInt(data, 9));
 
                 int range = Message.getInt(data, 13);
 

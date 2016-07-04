@@ -7,8 +7,10 @@ import dk.mrspring.wasteland.utils.CustomItemStack;
 import dk.mrspring.wasteland.utils.Sphere;
 import dk.mrspring.wasteland.utils.Vector;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -53,7 +55,7 @@ public class Building
         this.width = w;
         this.height = h;
         this.length = l;
-        this.blocks = (byte[]) b.clone();
+        this.blocks = b.clone();
         this.data = d;
         this.name = name;
         this.duplicate = multiple;
@@ -101,11 +103,10 @@ public class Building
         }
     }
 
-    public boolean generate(World world, Random random, Vector pos, int rot)
+    public boolean generate(World world, Random random, BlockPos pos, int rot)
     {
         Block surfaceBlock = ModConfig.getSurfaceBlock();
         int surfaceBlockMeta = ModConfig.getSurfaceBlockMeta();
-        RuinGenHelper var10000 = this.genHelper;
         RuinGenHelper.setWorld(world);
         byte maxSize;
         byte minSize;
@@ -140,10 +141,11 @@ public class Building
 
             for (z = 0; z < x; ++z)
             {
-                world.setBlock(pos.X + 1, pos.Y - 1 - z, pos.Z + 1, Blocks.water);
-                world.setBlock(pos.X + 2, pos.Y - 1 - z, pos.Z + 1, Blocks.water);
-                world.setBlock(pos.X + 2, pos.Y - 1 - z, pos.Z + 2, Blocks.water);
-                world.setBlock(pos.X + 1, pos.Y - 1 - z, pos.Z + 2, Blocks.water);
+                IBlockState state = Blocks.water.getDefaultState();
+                world.setBlockState(pos.add(1, -(z + 1), 1)/*pos.X + 1, pos.Y - 1 - z, pos.Z + 1*/, state);
+                world.setBlockState(pos.add(2, -(z + 1), 1)/*pos.X + 2, pos.Y - 1 - z, pos.Z + 1*/, state);
+                world.setBlockState(pos.add(2, -(z + 1), 2)/*pos.X + 2, pos.Y - 1 - z, pos.Z + 2*/, state);
+                world.setBlockState(pos.add(1, -(z + 1), 2)/*pos.X + 1, pos.Y - 1 - z, pos.Z + 2*/, state);
             }
         } else
         {
@@ -176,23 +178,21 @@ public class Building
                         z = this.width - k - 1;
                     }
 
+                    BlockPos cPos = pos.add(x, j, z);
                     if (this.blocks[count] == 7)
                     {
-                        var10000 = this.genHelper;
-                        RuinGenHelper.setBlock(pos.X + x, pos.Y + j, pos.Z + z, ModConfig.getSurfaceBlock(), surfaceBlockMeta);
+                        RuinGenHelper.setBlock(cPos, ModConfig.getSurfaceBlock(), surfaceBlockMeta);
                     } else if (this.blocks[count] != 2)
                     {
                         if (this.blocks[count] == 54)
                         {
-                            var10000 = this.genHelper;
-                            RuinGenHelper.setBlock(pos.X + x, pos.Y + j, pos.Z + z, Blocks.chest);
-                            TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos.X + x, pos.Y + j, pos.Z + z);
+                            RuinGenHelper.setBlock(cPos/*pos.X + x, pos.Y + j, pos.Z + z*/, Blocks.chest);
+                            TileEntityChest chest = (TileEntityChest) world.getTileEntity(cPos);
                             LootStack loot = this.setItems(random);
                             CustomItemStack.placeLoot(random, chest, CustomItemStack.getLootItems(random, loot.items, loot.minNum, loot.maxNum, loot.repeat));
                         } else
                         {
-                            var10000 = this.genHelper;
-                            RuinGenHelper.setBlock(pos.X + x, pos.Y + j, pos.Z + z, Block.getBlockById(this.blocks[count]), this.data[count]);
+                            RuinGenHelper.setBlock(cPos, Block.getBlockById(this.blocks[count]), this.data[count]);
                         }
                     }
 
@@ -226,7 +226,7 @@ public class Building
             int mod = node - this.width * this.length * y;
             int z = mod / this.width;
             int x = mod - z * this.width;
-            Sphere hole = new Sphere(new Vector(x, y, z), rad);
+            Sphere hole = new Sphere(new BlockPos(x, y, z), rad);
             this.blocks = hole.makeSphereOf(this.blocks, this.width, this.length, this.height, (byte) 0);
         }
 

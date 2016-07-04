@@ -6,6 +6,7 @@ import dk.mrspring.wasteland.utils.Vector;
 import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -14,22 +15,23 @@ public class Layout {
    public Rectangle cPos;
    public Rectangle[] bPos;
    public int[] bRot;
-   public int centerX;
-   public int centerZ;
+   public BlockPos centerPos;
    public int villageDim;
    public int villageSize;
 
 
-   public Layout(World world, Random rand, Building center, Building[] structures, int vPosX, int vPosZ, int dim, int size) {
-      this.centerX = vPosX;
-      this.centerZ = vPosZ;
+   public Layout(World world, Random rand, Building center, Building[] structures, BlockPos vPos, int dim, int size) {
+      this.centerPos = vPos;
       this.villageDim = dim;
       this.villageSize = size;
       int i;
       if(center != null) {
          i = (int)((float)center.width / 2.0F);
          int offsetZ = (int)((float)center.length / 2.0F);
-         this.cPos = new Rectangle(new Vector(vPosX - i, world.getHeightValue(vPosX - i, vPosZ - offsetZ) - 1, vPosZ - offsetZ), center.width, center.length);
+         this.cPos = new Rectangle(
+                 new BlockPos(vPos.getX() - i, world.getHeight(vPos.add(-i, 0, -offsetZ)).getY() - 1, vPos.getZ() - offsetZ),
+                 center.width, center.length
+         );
       } else {
          this.cPos = null;
       }
@@ -43,7 +45,7 @@ public class Layout {
    }
 
    private Rectangle pickBestPos(World world, Random rand, Building b) {
-      Vector cent = new Vector(this.centerX, getWorldHeight(world, this.centerX, this.centerZ), this.centerZ);
+      BlockPos cent = getWorldHeight(world, centerPos);
       short maxTries = 1000;
 
       for(int i = 0; i < maxTries; ++i) {
@@ -62,7 +64,7 @@ public class Layout {
 
          int[] levels = getLevels(world, pos);
          if(flag && checkLevel(levels, b.width < 8 && b.length < 8?0:1)) {
-            pos.position.Y = getAverageLevel(levels) - 1;
+            pos.position = new BlockPos(pos.position.getX(), getAverageLevel(levels) - 1, pos.position.getZ());
             return pos;
          }
       }
@@ -76,7 +78,7 @@ public class Layout {
 
       for(int j = 0; j < rect.length; ++j) {
          for(int i = 0; i < rect.width; ++i) {
-            height[j * rect.width + i] = getWorldHeight(world, rect.position.X + i, rect.position.Z + j);
+            height[j * rect.width + i] = getWorldHeight(world, rect.position.add(i, 0, j)).getY();
          }
       }
 
@@ -119,19 +121,19 @@ public class Layout {
       }
    }
 
-   public static int getWorldHeight(World world, int x, int z) {
-      int worldHeight = world.getHeightValue(x, z);
-      if(worldHeight == 0) {
-         Chunk block = world.getChunkFromBlockCoords(x, z);
-         world.getChunkProvider().loadChunk(block.xPosition, block.zPosition);
-         worldHeight = world.getHeightValue(x, z);
+   public static BlockPos getWorldHeight(World world, BlockPos pos) {
+      BlockPos worldHeight = world.getHeight(pos);
+      if(worldHeight.getY() == 0) {
+         Chunk block = world.getChunkFromBlockCoords(pos);
+         world.getChunkProvider().provideChunk(block.xPosition, block.zPosition);
+         worldHeight = world.getHeight(pos);
       }
 
-      Block var5 = world.getBlock(x, worldHeight, z);
-      if(worldHeight == 0) {
+      Block var5 = world.getBlockState(worldHeight).getBlock();
+      if(worldHeight.getY() == 0) {
          System.out.println("World height still 0");
       } else if(var5.equals(Blocks.deadbush)) {
-         --worldHeight;
+         worldHeight.add(0, -1, 0);
       }
 
       return worldHeight;

@@ -5,6 +5,7 @@ import dk.mrspring.wasteland.ruin.Layout;
 import dk.mrspring.wasteland.utils.Rectangle;
 import java.util.Random;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class RuinedVillage {
@@ -12,16 +13,14 @@ public class RuinedVillage {
    private Building[] structures;
    private Building center;
    private Layout lay;
-   private int locX;
-   private int locZ;
+   private BlockPos pos;
    private int dimension;
 
 
-   public RuinedVillage(World world, int posX, int posZ, int dim, int size, Random rand) {
+   public RuinedVillage(World world, BlockPos pos, int dim, int size, Random rand) {
       rand.nextInt(100);
       System.out.println("Size: " + String.valueOf(size));
-      this.locX = posX;
-      this.locZ = posZ;
+      this.pos = pos;
       this.dimension = dim;
       boolean numStructures = true;
       boolean centerStruct = false;
@@ -84,7 +83,7 @@ public class RuinedVillage {
          }
       }
 
-      this.lay = new Layout(world, rand, this.center, this.structures, posX, posZ, dim, size);
+      this.lay = new Layout(world, rand, this.center, this.structures, pos, dim, size);
    }
 
    private boolean checkDuplicates(Building c, Building[] b, int num) {
@@ -157,17 +156,6 @@ public class RuinedVillage {
       for(int i = 0; i < this.lay.bPos.length; ++i) {
          if(this.lay.bPos[i] != null && this.structures[i] != null) {
             this.structures[i].generate(world, random, this.lay.bPos[i].position, this.lay.bPos[i].rotation);
-         }
-      }
-
-   }
-
-   private void generateRect(World world, Rectangle r, int h) {
-      for(int i = 0; i < r.length; ++i) {
-         for(int j = 0; j < r.width; ++j) {
-            if(i == 0 || j == 0 || i == r.length - 1 || j == r.width - 1) {
-               world.setBlock(r.position.X + j, r.position.Y + h, r.position.Z + i, Blocks.sponge);
-            }
          }
       }
 

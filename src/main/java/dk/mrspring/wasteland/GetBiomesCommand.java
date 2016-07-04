@@ -10,6 +10,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -32,17 +33,17 @@ public class GetBiomesCommand extends CommandBase {
          World world = player.worldObj;
          if(var.length > 0 && player instanceof EntityPlayerMP) {
             int range = Math.max(Integer.parseInt(var[0]), 200);
-            processCommandServer((EntityPlayerMP)player, range, new Vector((int)player.posX, (int)player.posY, (int)player.posZ));
+            processCommandServer((EntityPlayerMP)player, range, player.getPosition());
          }
       }
 
    }
 
-   public static void processCommandServer(EntityPlayerMP player, int range, Vector pos) {
+   public static void processCommandServer(EntityPlayerMP player, int range, BlockPos pos) {
       sendBiomes(range, pos, player, player.worldObj);
    }
 
-   public static void processCommandServer(String playerName, int range, Vector pos) {
+   public static void processCommandServer(String playerName, int range, BlockPos pos) {
       World world = MinecraftServer.getServer().getEntityWorld();
       EntityPlayer player = world.getPlayerEntityByName(playerName);
       if(player instanceof EntityPlayerMP) {
@@ -53,7 +54,7 @@ public class GetBiomesCommand extends CommandBase {
 
    }
 
-   public static void sendBiomes(int range, Vector position, EntityPlayerMP player, World world) {
+   public static void sendBiomes(int range, BlockPos position, EntityPlayerMP player, World world) {
       short minSize = 200;
       int interval = range / minSize;
       int[][] biomeMap = new int[minSize][minSize];
@@ -65,7 +66,12 @@ public class GetBiomesCommand extends CommandBase {
 
       for(int j = 0; j < minSize; ++j) {
          for(int i = 0; i < minSize; ++i) {
-            BiomeGenBase currentBiome = world.getBiomeGenForCoords(position.X - minSize * interval / 2 + i * interval, position.Z - minSize * interval / 2 + j * interval);
+            BiomeGenBase currentBiome = world.getBiomeGenForCoords(
+                    position.add(
+                            -minSize * interval / 2 + i * interval,
+                            0,
+                            -minSize * interval / 2 + j * interval
+                    ));
             if(!biomes.contains(currentBiome)) {
                biomes.add(currentBiome);
             }

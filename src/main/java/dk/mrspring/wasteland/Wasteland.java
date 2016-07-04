@@ -1,18 +1,5 @@
 package dk.mrspring.wasteland;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import dk.mrspring.wasteland.GuiEventHandler;
 import dk.mrspring.wasteland.PostModWorldGenerator;
 import dk.mrspring.wasteland.WastelandEventHandler;
@@ -34,6 +21,17 @@ import java.io.File;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(
    modid = ModHelper.ModInfo.modid,
@@ -47,15 +45,14 @@ public class Wasteland {
    public static RuinVillageGenerator villageGenerator;
    public static CityGenerator cityGenerator;
    public static SimpleNetworkWrapper NETWORK;
-   public static int lastID = 0;
-   @Instance("WLM")
+   @Mod.Instance("WLM")
    public static Wasteland instance;
    public static WastelandEventHandler eventHandler;
    public static WastelandWorldData worldData = new WastelandWorldData();
    public static ItemRegistry items;
 
 
-   @EventHandler
+   @Mod.EventHandler
    public static void preInit(FMLPreInitializationEvent event) {
       NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel("WLM".toLowerCase());
       NETWORK.registerMessage(Message.HandlerClient.class, Message.class, 0, Side.CLIENT);
@@ -66,9 +63,7 @@ public class Wasteland {
       ModConfig.load(config);
       RuinConfig.load(ruinConfig);
       CityLootConfig.load(cityConfig);
-      int id = EntityRegistry.findGlobalUniqueEntityId();
-      EntityRegistry.registerGlobalEntityID(EntityDayZombie.class, "Day Zombie", id);
-      EntityRegistry.registerModEntity(EntityDayZombie.class, "Day Zombie", id, instance, 128, 1, true);
+      EntityRegistry.registerModEntity(EntityDayZombie.class, "Day Zombie", 0, instance, 128, 1, true);
       items = new ItemRegistry();
       if(event.getSide().isClient()) {
          registerRendering();
@@ -82,24 +77,23 @@ public class Wasteland {
       eventHandler.initialize(villageGenerator, cityGenerator, worldData);
    }
 
-   @EventHandler
+   @Mod.EventHandler
    public static void init(FMLInitializationEvent event) {
       wastelandWorldType = new WorldTypeWasteland("wasteland");
-      WastelandGeneratorInfo var10000 = WorldTypeWasteland.genInfo;
       WastelandGeneratorInfo.createDefault();
    }
 
-   @EventHandler
+   @Mod.EventHandler
    public static void postInit(FMLPostInitializationEvent event) {
       Configuration spawnConfig = new Configuration(new File("config/Wasteland/CreatureSpawns.cfg"));
       EntitySpawnConfig.load(spawnConfig);
       BiomeGenWastelandBase.load();
-      GameRegistry.registerWorldGenerator((new PostModWorldGenerator()).toIWorldGenerator(), 10);
+      GameRegistry.registerWorldGenerator(new PostModWorldGenerator(), 10);
    }
 
    @SideOnly(Side.CLIENT)
    private static void registerRendering() {
-      RenderingRegistry.registerEntityRenderingHandler(EntityDayZombie.class, new RenderDayZombie());
+      RenderingRegistry.registerEntityRenderingHandler(EntityDayZombie.class, new RenderDayZombie.RenderFactory());
    }
 
 }

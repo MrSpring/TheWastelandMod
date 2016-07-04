@@ -1,12 +1,7 @@
 package dk.mrspring.wasteland.city;
 
-import cpw.mods.fml.common.IWorldGenerator;
-import cpw.mods.fml.common.registry.GameRegistry;
 import dk.mrspring.wasteland.Wasteland;
 import dk.mrspring.wasteland.WastelandBiomes;
-import dk.mrspring.wasteland.city.MultiVector;
-import dk.mrspring.wasteland.city.RuinedCity;
-import dk.mrspring.wasteland.city.SchematicBuilding;
 import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.items.LootStack;
 import dk.mrspring.wasteland.ruin.Layout;
@@ -16,54 +11,56 @@ import dk.mrspring.wasteland.world.WastelandWorldData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.fml.common.IWorldGenerator;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class CityGenerator implements IWorldGenerator {
+public class CityGenerator implements IWorldGenerator
+{
 
-   public static List cityLocation;
+   public static List<BlockPos> cityLocation;
    public static int cityNum;
    private static boolean generating = false;
    private boolean loadedWorld;
 
 
    public CityGenerator() {
-      GameRegistry.registerWorldGenerator(this.toIWorldGenerator(), 12);
-      cityLocation = new ArrayList();
+      GameRegistry.registerWorldGenerator(this, 12);
+      cityLocation = new ArrayList<BlockPos>();
       cityNum = 0;
       this.loadedWorld = false;
    }
 
-   public IWorldGenerator toIWorldGenerator() {
-      return this;
-   }
-
    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-      if(world.provider.dimensionId == 0 && world.getBiomeGenForCoords(chunkX * 16, chunkZ * 16) == WastelandBiomes.city && this.loadedWorld && ModConfig.spawnCities) {
-         this.generateCity(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+      BlockPos pos = new BlockPos(chunkX * 16, 0, chunkZ * 16);
+      if(world.provider.getDimensionId() == 0 && world.getBiomeGenForCoords(pos) == WastelandBiomes.city && this.loadedWorld && ModConfig.spawnCities) {
+         this.generateCity(random, pos, world, chunkGenerator, chunkProvider);
       }
 
    }
 
-   public void generateCity(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-      MultiVector currentLoc = new MultiVector(chunkX * 16, Layout.getWorldHeight(world, chunkX * 16, chunkZ * 16), chunkZ * 16);
-      if(this.checkDist(currentLoc, (double)(ModConfig.minCityDistance * 16)) && !generating && !world.isRemote) {
+   public void generateCity(Random random, BlockPos pos, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+      MultiVector currentLoc = new MultiVector(Layout.getWorldHeight(world, pos));
+      if(this.checkDist(currentLoc.pos, (double)(ModConfig.minCityDistance * 16)) && !generating && !world.isRemote) {
          Wasteland.NETWORK.sendToAll(Message.createChatMessage("Generating world structures (please wait)..."));
          Wasteland.NETWORK.sendToAll(Message.createProgressMessage(0, 1));
          generating = true;
-         ArrayList chunks = new ArrayList();
+         List<MultiVector> chunks = new ArrayList<MultiVector>();
          chunks.add(currentLoc);
          this.addConnectedBiomeChunks(chunks, currentLoc, world);
          MultiVector center = this.getCenterChunk(chunks, world);
          this.limitCitySize(chunks, center, ModConfig.maxCitySize * 16);
          if(chunks.size() > 0) {
-            System.out.println("Generating City at X:" + String.valueOf(center.X) + " Z:" + center.Z + " Size: " + chunks.size());
+            System.out.println("Generating City at X:" + center.toString() + " Size: " + chunks.size());
             List buildingSchematics = SchematicBuilding.loadAllBuildings();
             LootStack[] loot = LootStack.loadCityLoot();
             RuinedCity city = new RuinedCity(world, center, chunks, random);
             city.generate(world, random, buildingSchematics, loot);
             buildingSchematics.clear();
-            cityLocation.add(center);
+            cityLocation.add(center.pos);
             ++cityNum;
          }
 
@@ -74,35 +71,35 @@ public class CityGenerator implements IWorldGenerator {
 
    }
 
-   private void limitCitySize(List allChunks, MultiVector centerChunk, int maxChunkDist) {
+   private void limitCitySize(List<MultiVector> allChunks, MultiVector centerChunk, int maxChunkDist) {
       for(int i = allChunks.size() - 1; i >= 0; --i) {
-         if(Vector.VtoVlengthXZ(centerChunk, (Vector)allChunks.get(i)) > (double)maxChunkDist) {
+         if(Vector.VtoVlengthXZ(centerChunk.pos, allChunks.get(i).pos) > (double)maxChunkDist) {
             allChunks.remove(i);
          }
       }
 
    }
 
-   private MultiVector getCenterChunk(List chunks, World world) {
-      int maxX = ((MultiVector)chunks.get(0)).X;
+   private MultiVector getCenterChunk(List<MultiVector> chunks, World world) {
+      int maxX = chunks.get(0).pos.getX();
       int minX = maxX;
-      int maxZ = ((MultiVector)chunks.get(0)).Z;
+      int maxZ = chunks.get(0).pos.getZ();
       int minZ = maxZ;
 
       int cX;
       for(cX = 1; cX < chunks.size(); ++cX) {
-         maxX = ((MultiVector)chunks.get(cX)).X > maxX?((MultiVector)chunks.get(cX)).X:maxX;
-         minX = ((MultiVector)chunks.get(cX)).X < minX?((MultiVector)chunks.get(cX)).X:minX;
-         maxZ = ((MultiVector)chunks.get(cX)).Z > maxZ?((MultiVector)chunks.get(cX)).Z:maxZ;
-         minZ = ((MultiVector)chunks.get(cX)).Z < minZ?((MultiVector)chunks.get(cX)).Z:minZ;
+         maxX = chunks.get(cX).pos.getX() > maxX?chunks.get(cX).pos.getX():maxX;
+         minX = chunks.get(cX).pos.getX() < minX?chunks.get(cX).pos.getX():minX;
+         maxZ = chunks.get(cX).pos.getZ() > maxZ?chunks.get(cX).pos.getZ():maxZ;
+         minZ = chunks.get(cX).pos.getZ() < minZ?chunks.get(cX).pos.getZ():minZ;
       }
 
       cX = (maxX - minX) / 2 + minX & -16;
       int cZ = (maxZ - minZ) / 2 + minZ & -16;
 
       for(int i = 0; i < chunks.size(); ++i) {
-         MultiVector v = (MultiVector)chunks.get(i);
-         if(v.X == cX && v.Z == cZ) {
+         MultiVector v = chunks.get(i);
+         if(v.pos.getX() == cX && v.pos.getZ() == cZ) {
             return v;
          }
       }
@@ -111,23 +108,23 @@ public class CityGenerator implements IWorldGenerator {
       return null;
    }
 
-   private void addConnectedBiomeChunks(List chunks, MultiVector position, World world) {
-      int biomeID = world.getBiomeGenForCoords(position.X, position.Z).biomeID;
+   private void addConnectedBiomeChunks(List<MultiVector> chunks, MultiVector position, World world) {
+      int biomeID = world.getBiomeGenForCoords(position.pos).biomeID;
       MultiVector[] newChunks = new MultiVector[]{null, null, null, null};
       boolean containsChunk = false;
 
       int i;
       for(i = 0; i < 4; ++i) {
          MultiVector current = this.chooseChunk(i, position);
-         if(world.getBiomeGenForCoords(current.X, current.Z).biomeID == biomeID) {
+         if(world.getBiomeGenForCoords(current.pos).biomeID == biomeID) {
             for(int j = 0; j < chunks.size() && !containsChunk; ++j) {
-               if(((MultiVector)chunks.get(j)).equalsXZ(current)) {
+               if(chunks.get(j).equalsXZ(current)) {
                   containsChunk = true;
                }
             }
 
             if(!containsChunk) {
-               current.Y = Layout.getWorldHeight(world, current.X, current.Z);
+               current.pos = Layout.getWorldHeight(world, current.pos);
                newChunks[i] = current.copy();
                chunks.add(newChunks[i]);
             } else {
@@ -149,21 +146,21 @@ public class CityGenerator implements IWorldGenerator {
    private MultiVector chooseChunk(int i, MultiVector position) {
       MultiVector pos;
       if(i == 0) {
-         pos = new MultiVector(position.X + 16, position.Y, position.Z);
+         pos = new MultiVector(position.pos.add(16, 0, 0));
       } else if(i == 1) {
-         pos = new MultiVector(position.X - 16, position.Y, position.Z);
+         pos = new MultiVector(position.pos.add(-16, 0, 0));
       } else if(i == 2) {
-         pos = new MultiVector(position.X, position.Y, position.Z + 16);
+         pos = new MultiVector(position.pos.add(0, 0, 16));
       } else {
-         pos = new MultiVector(position.X, position.Y, position.Z - 16);
+         pos = new MultiVector(position.pos.add(0, 0, -16));
       }
 
       return pos;
    }
 
-   private boolean checkDist(Vector current, double distance) {
+   private boolean checkDist(BlockPos current, double distance) {
       for(int i = 0; i < cityLocation.size(); ++i) {
-         if(Vector.VtoVlength(current, (Vector)cityLocation.get(i)) < distance) {
+         if(Vector.VtoVlength(current, (BlockPos) cityLocation.get(i)) < distance) {
             return false;
          }
       }
@@ -178,21 +175,7 @@ public class CityGenerator implements IWorldGenerator {
       this.loadedWorld = true;
    }
 
-   public static int getWorldHeight(World world, int x, int z) {
-      int worldHeight = world.getHeightValue(x, z);
-      if(worldHeight == 0) {
-         world.getChunkProvider().loadChunk(x >> 4, z >> 4);
-         worldHeight = world.getHeightValue(x, z);
-      }
-
-      if(worldHeight == 0) {
-         System.out.println("World height still 0");
-      }
-
-      return worldHeight;
-   }
-
-   public void loadData(List villageLoc, int size) {
+   public void loadData(List<BlockPos> villageLoc, int size) {
       cityLocation = villageLoc;
       cityNum = size;
       this.loadedWorld = true;

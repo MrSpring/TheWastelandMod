@@ -1,17 +1,29 @@
 package dk.mrspring.wasteland.city;
 
-import dk.mrspring.wasteland.utils.Vector;
+import net.minecraft.util.BlockPos;
 
-public class MultiVector extends Vector {
+public class MultiVector {
 
    MultiVector[] connectedChunk = new MultiVector[]{null, null, null, null};
-
+   BlockPos pos;
 
    public MultiVector(int x, int y, int z) {
-      super(x, y, z);
+      this.pos = new BlockPos(x, y, z);
+   }
+
+   public MultiVector(BlockPos pos){
+      this.pos = pos;
+   }
+
+   public boolean equalsXZ(MultiVector v){
+      return equalsXZ(v.pos);
+   }
+
+   public boolean equalsXZ(BlockPos pos){
+      return pos.getX() == this.pos.getX() && pos.getZ() == this.pos.getZ();
    }
 
    public MultiVector copy() {
-      return new MultiVector(super.X, super.Y, super.Z);
+      return new MultiVector(new BlockPos(pos));
    }
 }

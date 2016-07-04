@@ -1,12 +1,11 @@
 package dk.mrspring.wasteland.ruin;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import dk.mrspring.wasteland.config.RuinConfig;
 import dk.mrspring.wasteland.items.LootStack;
 import java.util.Random;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -17,8 +16,6 @@ public class Ruin {
    protected int id;
    protected int rarity = 1;
    protected int weight = 10;
-   @SideOnly(Side.CLIENT)
-   protected Item icon;
    protected ItemStack[] loot;
    public static LootStack normalLoot;
    public static LootStack rareLoot;
@@ -58,18 +55,16 @@ public class Ruin {
    }
 
    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-      if(world.provider.dimensionId == 0) {
+      if(world.provider.getDimensionId() == 0) {
          this.generateSurface(world, random, chunkX * 16, chunkZ * 16);
       }
 
    }
 
    protected void generateSurface(World world, Random random, int i, int j) {
-      int xCoord = i + random.nextInt(16);
-      int yCoord = world.getHeightValue(i, j);
-      int zCoord = j + random.nextInt(16);
+      BlockPos pos = world.getHeight(new BlockPos(i, 0, j)).add(random.nextInt(16), 0, random.nextInt(16));
       if(!world.isRemote) {
-         this.generate(world, random, xCoord, yCoord, zCoord);
+         this.generate(world, random, pos.getX(), pos.getY(), pos.getZ());
       }
 
    }
