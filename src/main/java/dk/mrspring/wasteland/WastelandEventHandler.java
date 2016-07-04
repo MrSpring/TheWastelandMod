@@ -1,9 +1,5 @@
 package dk.mrspring.wasteland;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import dk.mrspring.wasteland.GetBiomesCommand;
-import dk.mrspring.wasteland.GetNamesCommand;
 import dk.mrspring.wasteland.city.CityGenerator;
 import dk.mrspring.wasteland.config.ModConfig;
 import dk.mrspring.wasteland.gui.ProgressGui;
@@ -23,17 +19,18 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class WastelandEventHandler {
 
@@ -125,9 +122,9 @@ public class WastelandEventHandler {
          EntityPlayer player = (EntityPlayer)event.entity;
          if(this.isNewPlayer(player) && Vector.VtoVlengthXZ(pos, this.spawnLoc) < 16.0D) {
             player.setPosition((double)this.spawnLoc.X, (double)this.spawnLoc.Y, (double)this.spawnLoc.Z);
-            ChunkCoordinates spawnPos = new ChunkCoordinates(this.spawnLoc.X - 2, this.spawnLoc.Y, this.spawnLoc.Z + 1);
-            player.setSpawnChunk(spawnPos, false);
-            this.worldSaveData.savePlayerName(player.getDisplayName());
+            BlockPos spawnPos = new BlockPos(this.spawnLoc.X - 2, this.spawnLoc.Y, this.spawnLoc.Z + 1);
+            player.setSpawnChunk(spawnPos, false, player.dimension);
+            this.worldSaveData.savePlayerName(player.getDisplayName().getFormattedText());
          }
       }
 
@@ -140,11 +137,10 @@ public class WastelandEventHandler {
    @SubscribeEvent
    public void disableSleep(PlayerInteractEvent event) {
       Action var10001 = event.action;
-      if(event.action == Action.RIGHT_CLICK_BLOCK && ModConfig.disableSleep) {
-         Block block = event.world.getBlock(event.x, event.y, event.z);
-         if(block instanceof BlockBed && !event.world.isRemote) {
-            ChunkCoordinates spawnPos = new ChunkCoordinates(event.x, event.y, event.z);
-            event.entityPlayer.setSpawnChunk(spawnPos, false);
+      if(event.action == Action.RIGHT_CLICK_BLOCK && ModConfig.disableSleep && !event.world.isRemote) {
+         Block block = event.world.getBlockState(event.pos).getBlock();
+         if(block instanceof BlockBed) {
+            event.entityPlayer.setSpawnChunk(event.pos, false, event.entityPlayer.dimension);
             event.entityPlayer.addChatMessage(new ChatComponentText("Spawn point set..."));
             event.setCanceled(true);
          }
@@ -174,10 +170,12 @@ public class WastelandEventHandler {
             double x1 = -1.0D * Math.cos((double)event.entityPlayer.rotationPitch * 3.141592653589793D / 180.0D) * Math.sin((double)event.entityPlayer.rotationYaw * 3.141592653589793D / 180.0D);
 
             for(double i = 0.0D; i < 20.0D; i += 0.1D) {
-               int bx = (int)(event.entityPlayer.posX + x1 * i - 1.0D);
-               int by = (int)(event.entityPlayer.posY + (double)event.entityPlayer.eyeHeight + y1 * i);
-               int bz = (int)(event.entityPlayer.posZ + z1 * i);
-               Block block = event.world.getBlock(bx, by, bz);
+                BlockPos pos = new BlockPos(
+                  (int)(event.entityPlayer.posX + x1 * i - 1.0D),
+                  (int)(event.entityPlayer.posY + (double)event.entityPlayer.eyeHeight + y1 * i),
+                  (int)(event.entityPlayer.posZ + z1 * i)
+                );
+               Block block = event.world.getBlockState(pos).getBlock();
                if(block != null && block.getMaterial() == Material.water) {
                   if(!block.getUnlocalizedName().equals(Blocks.water.getUnlocalizedName())) {
                      event.setCanceled(true);
@@ -197,14 +195,14 @@ public class WastelandEventHandler {
       ItemStack result = this.fillCustomBucket(event.world, event.target);
       if(result != null) {
          event.result = result;
-         event.setResult(Result.ALLOW);
+         event.setResult(Event.Result.ALLOW);
       }
    }
 
    private ItemStack fillCustomBucket(World world, MovingObjectPosition pos) {
-      Block block = world.getBlock(pos.blockX, pos.blockY, pos.blockZ);
+      Block block = world.getBlockState(pos.getBlockPos()).getBlock();
       if(block instanceof BlockRadFluid) {
-         world.setBlockToAir(pos.blockX, pos.blockY, pos.blockZ);
+         world.setBlockToAir(pos.getBlockPos());
          return new ItemStack(ItemRegistry.radiationWasteBucket);
       } else {
          return null;

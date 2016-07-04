@@ -1,13 +1,14 @@
 package dk.mrspring.wasteland.gui;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.io.IOException;
 import java.util.List;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BiomesGui extends GuiScreen {
@@ -41,7 +42,7 @@ public class BiomesGui extends GuiScreen {
 
    private void drawBiomeNames(List biomes, int pixelWidth) {
       int shiftX = (int)((double)this.shiftLeftPercent / 100.0D * (double)super.width);
-      FontRenderer font = FMLClientHandler.instance().getClient().fontRenderer;
+      FontRenderer font = FMLClientHandler.instance().getClient().fontRendererObj;
       if((pixelWidth & 1) != 0) {
          int var10000 = (int)((double)pixelWidth / 2.0D);
       }
@@ -79,11 +80,11 @@ public class BiomesGui extends GuiScreen {
       return false;
    }
 
-   public void keyTyped(char c, int i) {
+   public void keyTyped(char c, int i) throws IOException {
       super.keyTyped(c, i);
    }
 
-   public void mouseClicked(int i, int j, int k) {
+   public void mouseClicked(int i, int j, int k) throws IOException {
       super.mouseClicked(i, j, k);
    }
 
@@ -95,7 +96,7 @@ public class BiomesGui extends GuiScreen {
       super.onGuiClosed();
    }
 
-   public void actionPerformed(GuiButton b) {
+   public void actionPerformed(GuiButton b) throws IOException {
       super.actionPerformed(b);
    }
 }

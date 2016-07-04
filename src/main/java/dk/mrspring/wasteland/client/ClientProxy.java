@@ -1,7 +1,8 @@
 package dk.mrspring.wasteland.client;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import dk.mrspring.wasteland.gui.BiomesGui;
+import net.minecraftforge.fml.client.FMLClientHandler;
+
 import java.util.List;
 
 public class ClientProxy {
