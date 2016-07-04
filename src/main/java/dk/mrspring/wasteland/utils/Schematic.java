@@ -1,32 +1,43 @@
 package dk.mrspring.wasteland.utils;
 
+import dk.mrspring.wasteland.world.WastelandWorldData;
+import java.io.IOException;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 
-public class Schematic
-{
-    public int width = 0;
-    public int length = 0;
-    public int height = 0;
-    public byte[] blocks = new byte[0];
-    public byte[] data = new byte[0];
-    public int chestNum = 0;
+public class Schematic {
 
-    public void countChests()
-    {
-        this.chestNum = 0;
-        int chestID = Block.getIdFromBlock(Blocks.chest);
-        for (byte block : this.blocks) if (block == chestID) this.chestNum++;
-    }
+   public int width;
+   public int length;
+   public int height;
+   public byte[] blocks;
+   public byte[] data;
+   public int chestNum;
 
-    public void readFromNBT(NBTTagCompound compound)
-    {
-        this.width = compound.getShort("Width");
-        this.length = compound.getShort("Length");
-        this.height = compound.getShort("Height");
-        this.blocks = compound.getByteArray("Blocks");
-        this.data = compound.getByteArray("Data");
-        this.countChests();
-    }
+
+   public Schematic(String fileName) {
+      try {
+         WastelandWorldData.loadSchematic(fileName + ".schematic", this);
+      } catch (IOException var3) {
+         var3.printStackTrace();
+      }
+
+   }
+
+   public void load(int w, int l, int h, byte[] b, byte[] d) {
+      this.width = w;
+      this.length = l;
+      this.height = h;
+      this.blocks = b;
+      this.data = d;
+      this.chestNum = 0;
+      int chestID = Block.getIdFromBlock(Blocks.chest);
+
+      for(int i = 0; i < this.blocks.length; ++i) {
+         if(this.blocks[i] == chestID) {
+            ++this.chestNum;
+         }
+      }
+
+   }
 }

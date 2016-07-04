@@ -36,9 +36,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 @Mod(
-   modid = "WLM",
-   name = "The Wasteland Mod",
-   version = "1.4.3",
+   modid = ModHelper.ModInfo.modid,
+   name = ModHelper.ModInfo.name,
+   version = ModHelper.ModInfo.version,
    useMetadata = true
 )
 public class Wasteland {

@@ -67,8 +67,8 @@ public class RuinVillageGenerator implements IWorldGenerator {
    }
 
    public static void spawnBunker(Vector pos, World world) {
-      byte[] blocks = dk.mrspring.wasteland.ruin.code.BuildingCode.BLOCKS;
-      byte[] data = dk.mrspring.wasteland.ruin.code.BuildingCode.DATA;
+      byte[] blocks = dk.mrspring.wasteland.ruin.code.BuildingCode.Bunker.BLOCKS;
+      byte[] data = dk.mrspring.wasteland.ruin.code.BuildingCode.Bunker.DATA;
       int count = 0;
       int worldHeight = getWorldHeight(world, pos.X - 1, pos.Z - 5);
       Random random = new Random();

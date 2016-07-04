@@ -33,13 +33,6 @@ public class WorldTypeWasteland extends WorldType {
       return new ChunkProviderWasteland(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled());
    }
 
-   public boolean isCustomizable() {
-      return true;
-   }
-
-   @SideOnly(Side.CLIENT)
-   public void onCustomizeButton(Minecraft instance, GuiCreateWorld guiCreateWorld) {}
-
    public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer) {
       WastelandGenLayerBiome ret = new WastelandGenLayerBiome(200L, parentLayer, this);
       GenLayer ret1 = GenLayerZoom.magnify(1000L, ret, 2);

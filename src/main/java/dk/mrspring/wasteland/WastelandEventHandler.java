@@ -193,11 +193,6 @@ public class WastelandEventHandler {
    }
 
    @SubscribeEvent
-   public void onItemUse(PlayerUseItemEvent event) {
-      System.out.println(event.item.toString());
-   }
-
-   @SubscribeEvent
    public void onBucketFill(FillBucketEvent event) {
       ItemStack result = this.fillCustomBucket(event.world, event.target);
       if(result != null) {

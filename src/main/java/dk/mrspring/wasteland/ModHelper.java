@@ -40,8 +40,7 @@ public class ModHelper {
 
       public static final String modid = "WLM";
       public static final String name = "The Wasteland Mod";
-      public static final String version = "1.4.3";
-      public static final boolean isDev = "1.4.3".contains("DEV");
+      public static final String version = "1.4.5";
 
 
    }
